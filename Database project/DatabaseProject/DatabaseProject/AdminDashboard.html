@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="AdminDashboard.css">
+</head>
+<body>
+    <!-- Video Background -->
+    <video autoplay muted loop id="background-video">
+        <source src="C:/Users/abc/Desktop/DatabaseProject/Dashboard.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Hamburger Menu Icon -->
+    <div class="hamburger" onclick="toggleMenu()">
+        <img src="C:/Users/abc/Desktop/DatabaseProject/hamburgermenuicon.png" alt="Hamburger Menu Icon">
+    </div>
+    
+    <!-- Right Side Blue Frame with Notification Icon and Circular Frame -->
+    <div class="right-frame">
+        <!-- Notification Icon -->
+        <a href="Notifications.html" id="notification-icon">
+            <img src="C:/Users/abc/Desktop/DatabaseProject/notification.png" alt="Notification Icon">
+        </a>
+
+        <!-- Circular Frame -->
+        <div class="circular-frame">
+            <img src="C:/Users/abc/Desktop/DatabaseProject/your-icon.png" alt="Circular Frame Icon">
+        </div>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar" id="sidebar">
+        <div class="menu-items">
+            <a href="#" class="menu-item"><img src="C:/Users/abc/Desktop/DatabaseProject/homeicon.png" alt="Home Icon"> Home</a>
+            <a href="#" class="menu-item"><img src="C:/Users/abc/Desktop/DatabaseProject/usericon.png" alt="User Icon"> View Profile</a>
+            <a href="#" class="menu-item"><img src="C:/Users/abc/Desktop/DatabaseProject/graph.png" alt="Graph Icon"> Analysis</a>
+            <a href="#" class="menu-item"><img src="C:/Users/abc/Desktop/DatabaseProject/personal.png" alt="Personal Info Icon"> Personal Information</a>
+            <a href="#" class="menu-item"><img src="C:/Users/abc/Desktop/DatabaseProject/staticon.png" alt="Statistics Icon"> Statistics</a>
+        </div>
+    </div>
+
+    <!-- Page Content -->
+    <div class="content">
+        <h1>Dashboard</h1>
+        <p>Welcome to your dashboard. The menu opens when you click the hamburger icon.</p>
+
+        <!-- Post Box -->
+        <div class="post-box">
+            <textarea class="post-text-field" placeholder="What's on your mind today?" oninput="adjustHeight(this)"></textarea>
+            <!-- Camera Icon -->
+            <div class="camera-icon-container">
+                <img src="C:\Users\abc\Desktop\DatabaseProject\Cameraicon .png"alt="Camera Icon" class="camera-icon">
+            </div>
+        </div>
+    </div>
+
+    <script src="AdminDashboard.js"></script>
+</body>
+</html>

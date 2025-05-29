@@ -1,0 +1,219 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Background Video */
+#background-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+/* Body Style */
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Hamburger Menu Icon */
+.hamburger {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.hamburger img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Sidebar Style (Blue background for menu) */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background-color: #007bff;  /* Blue background for the menu */
+    transition: left 0.3s ease-in-out;
+    z-index: 999;
+    padding-top: 60px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* When Sidebar is Active */
+.sidebar.active {
+    left: 0;
+}
+
+/* Menu Items (White text and icons) */
+.sidebar .menu-items {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.sidebar .menu-items a {
+    color: white;  /* White text */
+    text-decoration: none;
+    margin: 10px 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar .menu-items a img {
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
+}
+
+.sidebar .menu-items a:hover {
+    background-color: #0056b3;
+}
+
+/* Right Frame (Wider and blue) */
+.right-frame {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 250px;  /* Wider width for the right frame */
+    background-color: #007bff;  /* Blue background */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+
+/* Notification Icon */
+#notification-icon {
+    display: block;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+/* Circular Frame (Larger size) */
+.circular-frame {
+    width: 150px;  /* Larger size for the circular frame */
+    height: 150px; /* Larger size */
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    margin-top: 30px;
+}
+
+.circular-frame img {
+    width: 90px;  /* Larger image inside circular frame */
+    height: 90px; /* Larger image */
+}
+
+/* Page Content */
+.content {
+    margin-left: 0;
+    padding: 80px;
+    z-index: 1;
+    position: relative;
+    color: black;
+}
+/* Post Box (Moved fully to the left) */
+.post-box {
+    position: relative;
+    width: 60%;  /* Reduced width to avoid overlap with the right blue frame */
+    min-height: 150px;
+    max-width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid #ddd;
+    background-color: #fff;
+    box-sizing: border-box;
+    margin-left: 10px;  /* Ensure it's fully on the left */
+}
+
+
+
+/* Post Text Field */
+.post-text-field {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    box-sizing: border-box;
+    overflow-y: auto;
+    resize: vertical;
+}
+
+/* Camera Icon (Positioned Outside of the Post Box) */
+.camera-icon-container {
+    position: absolute;
+    bottom: -20px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.camera-icon {
+    width: 30px;
+    height: 30px;
+}
+
+/* Sidebar (Blue background for active state) */
+.sidebar {
+    width: 250px;
+    background-color: #007bff;  /* Blue background for the sidebar */
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    padding-top: 60px;
+}
+
+.menu-items {
+    list-style: none;
+    padding: 0;
+}
+
+.menu-item {
+    padding: 10px 20px;
+    display: block;
+    color: #fff;  /* White text */
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.menu-item img {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+/* Content Section */
+.content {
+    margin-left: 270px;  /* Ensure it doesn’t overlap with the sidebar */
+    padding: 20px;
+}
+
+/* On Focus Behavior */
+#post-textarea:focus {
+    background-color: #e7f4fe;
+}

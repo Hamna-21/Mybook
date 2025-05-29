@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="R.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Friends | MyBook</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7fb;
+            color: #333;
+        }
+
+        #blue_bar {
+            height: 70px;
+            background-color: #405d9b;
+            color: #d9dfeb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #blue_bar div {
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #blue_bar h1 {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .search-box-wrapper {
+            position: relative;
+            width: 350px;
+        }
+
+        #search_box {
+            width: 100%;
+            height: 40px;
+            padding-left: 35px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            z-index: 10;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            font-size: 18px;
+            color: #aaa;
+        }
+
+        .content {
+            display: flex;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .section-frame {
+            flex: 1;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .frame-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #405d9b;
+        }
+
+        .friend, .friend-request {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .friend img, .friend-request img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .friend-name {
+            font-size: 18px;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .send-request-btn, .accept-btn, .reject-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .send-request-btn {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .accept-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .reject-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        #search_results {
+            margin-top: 10px;
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 5;
+        }
+
+        #search_results .friend-request, .friend {
+            margin: 5px 0;
+            display: block; /* Ensure the results are stacked vertically */
+        }
+
+        #search_results .toggle-btn {
+            display: inline-block;
+            font-size: 18px;
+            color: #405d9b;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="blue_bar">
+        <div>
+            <h1>MyBook</h1>
+            <div class="search-box-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="search_box" placeholder="Search for People">
+                <img src="Profilephoto.jpg" alt="Profile" style="width: 50px; height: 50px; border-radius: 50%; margin-left: 10px;">
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="section-frame" id="friendRequestFrame">
+            <div class="frame-heading">
+                <span>Friend Requests</span>
+            </div>
+            <div id="friendRequests">
+                <!-- Friend requests will be dynamically added here -->
+            </div>
+        </div>
+
+        <div class="section-frame" id="friendsFrame">
+            <div class="frame-heading">
+                <span>Friends</span>
+            </div>
+            <div id="friendsList">
+                <!-- Friends list will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="search_results">
+        <span class="toggle-btn" id="toggleSearchResults">▼</span>
+        <!-- Search results will be dynamically added here -->
+    </div>
+
+    <script>
+        const searchBox = document.getElementById("search_box");
+        const searchResults = document.getElementById("search_results");
+        const toggleSearchResults = document.getElementById("toggleSearchResults");
+
+        // Fetch users when typing in the search box
+        searchBox.addEventListener("input", function () {
+            const query = searchBox.value.trim();
+            if (query.length > 0) {
+                fetchUsers(query);
+            } else {
+                searchResults.style.display = "none";
+            }
+        });
+
+        // Toggle the visibility of search results
+        toggleSearchResults.addEventListener("click", function() {
+            const isVisible = searchResults.style.display === "block";
+            searchResults.style.display = isVisible ? "none" : "block";
+            toggleSearchResults.textContent = isVisible ? "▼" : "▲";
+        });
+
+        // Function to fetch users for the search bar
+        function fetchUsers(query) {
+            fetch(`http://localhost:3000/search?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(users => {
+                    if (Array.isArray(users)) {
+                        searchResults.innerHTML = "";
+                        if (users.length === 0) {
+                            searchResults.innerHTML = "<p>No users found</p>";
+                        } else {
+                            users.forEach(user => {
+                                const userDiv = document.createElement("div");
+                                userDiv.classList.add("friend-request");
+                                const imageUrl = user.profile_photo && isValidImageUrl(user.profile_photo)
+                                    ? user.profile_photo
+                                    : 'default.jpg';
+
+                                userDiv.innerHTML = ` 
+                                    <img src="${imageUrl}" alt="${user.username}">
+                                    <span class="friend-name">${user.username}</span>
+                                    <button class="send-request-btn" onclick="sendFriendRequest(${user.id})">Send Friend Request</button>
+                                `;
+                                searchResults.appendChild(userDiv);
+                            });
+                        }
+                        searchResults.style.display = "block";
+                    }
+                })
+                .catch(error => {
+                    searchResults.innerHTML = "<p>Error occurred while fetching users. Please try again.</p>";
+                });
+        }
+
+        function isValidImageUrl(url) {
+            return (url && url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+        }
+
+        function sendFriendRequest(friendId) {
+            const userId = 1;  // Get logged-in user ID
+            fetch('http://localhost:3000/sendFriendRequest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    sender_id: userId,
+                    receiver_id: friendId,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Friend request sent!');
+            })
+            .catch(error => {
+                alert('Error sending friend request.');
+            });
+        }
+
+        // Fetch friend requests for the logged-in user
+        function fetchFriendRequests() {
+            const userId = 1; // Assume we fetch this dynamically
+            fetch(`http://localhost:3000/friendRequests?userId=${userId}`)
+                .then(response => response.json())
+                .then(friendRequests => {
+                    const friendRequestContainer = document.getElementById("friendRequests");
+                    friendRequestContainer.innerHTML = "";
+                    friendRequests.forEach(request => {
+                        const requestDiv = document.createElement("div");
+                        requestDiv.classList.add("friend-request");
+                        requestDiv.innerHTML = `
+                            <span class="friend-name">${request.username}</span>
+                            <button class="accept-btn" onclick="respondToFriendRequest(${request.request_id}, 'accept')">Accept</button>
+                            <button class="reject-btn" onclick="respondToFriendRequest(${request.request_id}, 'reject')">Reject</button>
+                        `;
+                        friendRequestContainer.appendChild(requestDiv);
+                    });
+                })
+                .catch(error => console.error('Error fetching friend requests:', error));
+        }
+
+        // Respond to friend requests (accept/reject)
+        function respondToFriendRequest(requestId, action) {
+            fetch('http://localhost:3000/respondToFriendRequest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ requestId, response: action }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(`${action.charAt(0).toUpperCase() + action.slice(1)}ed the friend request`);
+                fetchFriendRequests();  // Reload the friend requests
+            })
+            .catch(error => console.error('Error responding to friend request:', error));
+        }
+
+        // Fetch friends list for the logged-in user
+        function fetchFriends() {
+            const userId = 1; // Assume we fetch this dynamically
+            fetch(`http://localhost:3000/friends?userId=${userId}`)
+                .then(response => response.json())
+                .then(friends => {
+                    const friendsContainer = document.getElementById("friendsList");
+                    friendsContainer.innerHTML = "";
+                    friends.forEach(friend => {
+                        const friendDiv = document.createElement("div");
+                        friendDiv.classList.add("friend");
+                        friendDiv.innerHTML = `
+                            <img src="${friend.profile_photo || 'default.jpg'}" alt="${friend.username}">
+                            <span class="friend-name">${friend.username}</span>
+                        `;
+                        friendsContainer.appendChild(friendDiv);
+                    });
+                })
+                .catch(error => console.error('Error fetching friends list:', error));
+        }
+
+        // Fetch initial data
+        fetchFriendRequests();
+        fetchFriends();
+    </script>
+</body>
+</html>

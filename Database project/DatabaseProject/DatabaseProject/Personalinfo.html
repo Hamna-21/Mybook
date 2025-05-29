@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Information</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>PERSONAL INFORMATION</h1>
+        </div>
+
+        <div class="profile-container">
+            <div class="profile-picture">
+                <!-- Hidden file input to trigger image upload -->
+                <input type="file" id="upload" name="profile-image" class="upload" accept="image/*">
+                <!-- Pen icon to trigger file input -->
+                <label for="upload" class="pen">&#9998;</label>
+                <!-- Image element to display the uploaded image -->
+                <img id="profile-img" src="" alt="Profile Picture" />
+            </div>
+            <form id="personal-info-form" class="info-form" enctype="multipart/form-data">
+                <div class="input-field">
+                    <label for="first-name">First Name</label>
+                    <input type="text" id="first-name" name="first-name" required>
+                </div>
+                <div class="input-field">
+                    <label for="last-name">Last Name</label>
+                    <input type="text" id="last-name" name="last-name" required>
+                </div>
+                <div class="input-field">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="input-field">
+                    <label for="phone">Phone</label>
+                    <input type="text" id="phone" name="phone" required>
+                </div>
+                <div class="input-field">
+                    <label for="occupation">Occupation</label>
+                    <select id="occupation" name="occupation" required>
+                        <option value="Software Engineer">Software Engineer</option>
+                        <option value="Web Developer">Web Developer</option>
+                        <option value="Data Scientist">Data Scientist</option>
+                        <option value="Student">Student</option>
+                    </select>
+                </div>
+                <div class="input-field">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" required>
+                        <option value="Single">Single</option>
+                        <option value="Married">Married</option>
+                    </select>
+                </div>
+                <button type="submit" class="save-button">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cropper.js container for cropping the uploaded image -->
+    <div id="cropper-container" style="display:none;">
+        <div id="cropper">
+            <button id="save-button">Save Cropped Image</button>
+        </div>
+    </div>
+
+    <!-- Confirmation Message -->
+    <div id="confirmation-message" style="display:none; color: green; margin-top: 20px;">
+        Information saved successfully!
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const uploadInput = document.getElementById('upload');
+            const previewImage = document.getElementById('profile-img');
+            const cropperContainer = document.getElementById('cropper-container');
+            const saveButton = document.getElementById('save-button');
+            const confirmationMessage = document.getElementById('confirmation-message');
+            let cropper;
+            let croppedFile;
+
+            uploadInput.addEventListener('change', function (e) {
+                const file = e.target.files[0];
+
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (event) {
+                        previewImage.src = event.target.result;
+
+                        cropperContainer.style.display = "block";
+                        cropper = new Cropper(previewImage, {
+                            aspectRatio: 1,
+                            viewMode: 2,
+                            autoCropArea: 1,
+                            movable: false,
+                            zoomable: true,
+                            rotatable: false,
+                            ready() {
+                                cropper.setCropBoxData({
+                                    left: 0,
+                                    top: 0,
+                                    width: previewImage.width,
+                                    height: previewImage.height,
+                                });
+                            },
+                        });
+                    };
+
+                    reader.readAsDataURL(file);
+                } else {
+                    alert("Please select a valid image.");
+                }
+            });
+
+            saveButton.addEventListener('click', function () {
+                if (cropper) {
+                    const canvas = cropper.getCroppedCanvas();
+                    canvas.toBlob(function(blob) {
+                        croppedFile = new File([blob], "cropped-image.png", {
+                            type: "image/png"
+                        });
+
+                        previewImage.src = URL.createObjectURL(croppedFile);
+                        cropperContainer.style.display = "none";
+
+                        const formData = new FormData(document.getElementById('personal-info-form'));
+                        formData.append('profile-image', croppedFile);
+
+                        fetch('http://localhost:3000/save-personal-info', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => response.text())
+                        .then(data => {
+                            confirmationMessage.style.display = 'block';
+                        })
+                        .catch(error => alert('Error saving information.'));
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="R.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp&display=swap" rel="stylesheet">
+  
+    <title>Friends | MyBook</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7fb;
+            color: #333;
+        }
+
+        #blue_bar {
+            height: 70px;
+            background-color: #405d9b;
+            color: #d9dfeb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #blue_bar div {
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #blue_bar h1 {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+
+        /* Search Box Wrapper */
+        .search-box-wrapper {
+            position: relative;
+            width: 350px;
+            margin-left: 6rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            height: 40px;
+        }
+
+        #search_box {
+            width: 60%; /* Adjusting to create space between title and search bar */
+            height: 40px;
+            padding-left: 35px;  /* Space for icon */
+            padding-right: 15px;
+            align-items: center;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #search_box:focus {
+            border-color: #94afe6;
+            box-shadow: 0 0 5px rgba(64, 93, 155, 0.5);
+        }
+
+        /* Search Icon */
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            font-size: 18px;
+            color: #aaa;
+        }
+/* Search Results Wrapper */
+#search_results { 
+    position: absolute;
+    top: calc(100% + 5px); /* Add spacing below the search box */
+    left: 0;
+    width: 60%; /* Match the width of the search box wrapper */
+    width: 510px !important;
+/* Restrict max width to align with search box wrapper */
+    background-color: #a1b3da;
+    border: 1px solid #405d9b;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: none; /* Hide by default */
+    overflow: hidden; /* Prevent overflow of content */
+    display: none;
+    transition: opacity 0.2s ease-in-out;
+}
+#search_results.show {
+    display: block;
+    opacity: 1;
+}
+
+/* Individual Result Item */
+#search_results .result-item {
+    display: flex;
+    
+    padding: 1px; /* Moderate padding for cleaner appearance */
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* Hover Effect for Result Items */
+#search_results .result-item:hover {
+    background-color: #498820;
+}
+
+/* Profile Picture Styling */
+#search_results img {
+    width: 90px; /* Smaller profile picture */
+    height: 90px;
+    border-radius: 50%;
+    margin-right: 3px; /* Closer spacing with text */
+}
+
+/* Result Text Styling */
+#search_results p {
+    margin: 0;
+    font-size: 20px; /* Reduced font size for compact layout */
+    color: #240b96; /* White text for contrast on dark background */
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Ensure text does not overflow */
+    text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+}
+        .material-symbols-sharp {
+    font-family: 'Material Symbols Sharp';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    white-space: nowrap;
+    direction: ltr;
+} 
+.user-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .user-item {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: white;
+        }
+
+        .user-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .send-request-btn {
+            background-color: #405d9b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            
+        }
+        
+
+        .send-request-btn:disabled {
+            background-color: #bbb;
+            cursor: not-allowed;
+        }
+
+        .friend-requests-section, .friends-section {
+            width: 90%;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .friend-request-item, .friend-item {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: white;
+            margin-bottom: 10px;
+        }
+
+        .friend-request-item img, .friend-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .accept-btn {
+            background-color: red;
+            color: white;
+        }
+
+        .reject-btn {
+            background-color: green;
+            color: white;
+        }
+
+        .action-btn:disabled {
+            background-color: #bbb;
+            cursor: not-allowed;
+        }
+    
+</style>
+</head>
+<body>
+    <div id="blue_bar">
+        <div>
+            <h1>MyBook</h1>
+            <div class="search-box-wrapper">
+                <span class="material-symbols-sharp">search</span>
+                <input type="text" id="search_box" placeholder="Search users..." oninput="searchUsers()">
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Results Section -->
+    <div class="user-list-section">
+        <ul id="user-list" class="user-list"></ul>
+    </div>
+
+    <!-- Friend Requests Section -->
+    <div class="friend-requests-section">
+        <h2>Friend Requests</h2>
+        <ul id="friend-requests-list" class="friend-requests-list"></ul>
+    </div>
+
+    <!-- Friends Section -->
+    <div class="friends-section">
+        <h2>Your Friends</h2>
+        <ul id="friends-list" class="friends-list"></ul>
+    </div>
+
+    <script>
+ const userId = window.userId;  // Use global userId
+
+
+// Fetch users based on search input
+function searchUsers() {
+    const query = document.getElementById('search_box').value;
+    fetch(`http://localhost:4000/searchfriend?q=${query}`)
+        .then(response => response.json())
+        .then(data => {
+            const userList = document.getElementById('user-list');
+            userList.innerHTML = '';
+            data.forEach(user => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('user-item');
+                listItem.innerHTML = `
+                    <img src="${user.profile_photo || 'default.jpg'}" alt="${user.username}">
+                    <span>${user.username}</span>
+                    <button id="send-btn-${user.id}" class="send-request-btn" onclick="sendFriendRequest(${user.id})">Send Request</button>
+                `;
+                userList.appendChild(listItem);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+        // Fetch users based on search input
+        function searchUsers() {
+            const query = document.getElementById('search_box').value;
+            fetch(`http://localhost:4000/searchfriend?q=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    const userList = document.getElementById('user-list');
+                    userList.innerHTML = '';
+                    data.forEach(user => {
+                        const listItem = document.createElement('li');
+                        listItem.classList.add('user-item');
+                        listItem.innerHTML = `
+                            <img src="${user.profile_photo || 'default.jpg'}" alt="${user.username}">
+                            <span>${user.username}</span>
+                            <button id="send-btn-${user.id}" class="send-request-btn" onclick="sendFriendRequest(${user.id})">Send Request</button>
+                        `;
+                        userList.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        
+
+
+        // Function to fetch user data after login
+function fetchUserData() {
+    const baseUrl = 'http://localhost:4000'; // Your server's base URL
+    fetch(`${baseUrl}/dashboard`, {
+        method: 'POST', // Or GET if you prefer
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'same-origin', // Ensure cookies are sent
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.username) {
+            // Update the UI with the fetched user data
+            document.getElementById('username').textContent = data.username;
+
+            // Fetch profile and cover photos
+            fetchImage(data.profile_photo, 'profile-img', 'default-profile.jpg');
+            fetchImage(data.cover_photo, 'cover-photo', 'default-cover.jpg');
+
+            console.log('User data fetched successfully:', data);
+        } else {
+            // If no session or invalid user, redirect to login page
+            window.location.href = 'UserDashboard.html';
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching user data:', error);
+        window.location.href = 'UserDashboard.html'; // Redirect to login page on error
+    });
+}
+// Fetch friends for the logged-in user
+        function fetchFriends() {
+            fetch(`http://localhost:3001/friends?userId=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const friendsList = document.getElementById('friends-list');
+                    friendsList.innerHTML = '';
+                    data.forEach(friend => {
+                        const listItem = document.createElement('li');
+                        listItem.classList.add('friend-item');
+                        listItem.innerHTML = `
+                            <img src="${friend.profile_photo || 'default.jpg'}" alt="${friend.username}">
+                            <span>${friend.username}</span>
+                        `;
+                        friendsList.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Initialize friend requests and friends list on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchFriendRequests();
+            fetchFriends();
+        });
+
+// Function to fetch images using XMLHttpRequest
+function fetchImage(imageUrl, elementId, defaultImage) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', imageUrl || defaultImage, true);
+    
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            const img = document.getElementById(elementId);
+            const url = URL.createObjectURL(xhr.response);
+            img.src = url; // Set the image source to the blob URL
+            img.onload = function () {
+                URL.revokeObjectURL(url); // Revoke the object URL after the image is loaded
+            };
+        } else {
+            document.getElementById(elementId).src = defaultImage;
+        }
+    };
+    
+    xhr.onerror = function () {
+        document.getElementById(elementId).src = defaultImage;
+    };
+    
+    xhr.send();
+}
+
+// Event listener to ensure cookies can be accessed
+document.addEventListener('DOMContentLoaded', function () {
+  document.requestStorageAccess()
+    .then(() => {
+      console.log('Access to cookies granted');
+      // Fetch user data here if cookies are accessible
+      
+    })
+    .catch(() => {
+      console.log('Access to cookies denied');
+      // Handle the denial case here (e.g., show a message or fallback)
+    });
+});
+
+function updateUI(user) {
+ 
+    loadImage(user.profile_photo, 'Profile-img', 'default-profile.jpg');
+
+    console.log('UI updated with user data:', user);
+}
+function loadImage(imageUrl, elementId, defaultImage) {
+    const img = document.getElementById(elementId);
+    if (!img) {
+        console.error(`Element with ID "${elementId}" not found.`);
+        return;
+    }
+    img.src = imageUrl || defaultImage;
+    img.onerror = () => {
+        img.src = defaultImage;
+    };
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (userData) {
+        console.log('User data:', userData);
+        updateUI(userData);
+    } else {
+        console.warn('No user data in local storage. Fetching from server...');
+        fetchUserData();
+    }
+});
+
+
+
+    </script>
+</body>
+</html>

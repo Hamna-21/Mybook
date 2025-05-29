@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="R.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <title>Login | MyBook</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7fb;
+            color: #333;
+        }
+
+        /* Video Background */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .video-background video {
+            min-width: 100%;
+            min-height: 100%;
+            object-fit: cover;
+        }
+
+        /* Top Blue Bar */
+        #blue_bar {
+            height: 70px;
+            background-color: #405d9b;
+            color: #d9dfeb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #blue_bar div {
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Title Styling */
+        #blue_bar h1 {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* Register Section */
+        .login-container {
+            background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            padding: 40px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 100px auto;
+            position: relative;
+            z-index: 1; /* Ensure it's above the video */
+        }
+
+        .login-container h2 {
+            color: #405d9b;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .login-container input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+        }
+
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            background-color: #fff;
+            color: #405d9b;
+        }
+
+        .login-container input[type="submit"] {
+            background-color: #8a7ae7;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: none;
+        }
+
+        .login-container input[type="submit"]:hover {
+            background-color: #6645c0;
+        }
+
+        .login-container p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+
+        .login-container p a {
+            color: #3a46b6;
+            text-decoration: none;
+        }
+
+        .login-container p a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Video Background -->
+    <div class="video-background">
+        <video autoplay muted loop>
+            <source src="35344-405897623.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <!-- Navbar -->
+    <div id="blue_bar">
+        <div>
+            <!-- Title -->
+            <h1>MyBook</h1>
+        </div>
+    </div>
+
+    <!-- Login Section -->
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" id="username" name="username" placeholder="Username" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            <input type="submit" value="Login">
+        </form>
+        <p>Don't have an account? <a href="register.html">Register here</a></p>
+    </div>
+
+    <script>
+// Attach an event listener to the login form
+const loginForm = document.getElementById('loginForm');
+
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault(); // Prevent the default form submission
+
+    // Collect user input
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    try {
+        // Send a POST request to the server with login details
+        const response = await fetch('http://localhost:4000/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password }),
+        });
+
+        // Parse the server response
+        const data = await response.json();
+
+        if (response.ok) {
+            // Save user info in localStorage
+            localStorage.setItem('user', JSON.stringify(data.user));
+
+            // Redirect to the user dashboard
+            alert('Login successful!');
+            window.location.href = 'UserDashboard.html';
+        } else {
+            // Display error message from server
+            alert(data.message || 'Login failed!');
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
+        alert('Failed to connect to the server. Please try again later.');
+    }
+}); 
+// Get user data from local storage
+const userData = JSON.parse(localStorage.getItem('user'));
+
+// Check if user data exists
+if (userData) {
+  console.log('User data:', userData); // Debugging
+} else {
+  console.error('No user data found in local storage');
+}
+
+</script>
+</body>
+</html>

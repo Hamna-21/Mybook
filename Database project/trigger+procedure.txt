@@ -1,0 +1,337 @@
+select * from posts;
+
+DELIMITER $$
+
+CREATE PROCEDURE send_friend_request(
+    IN sender INT,
+    IN receiver INT
+)
+BEGIN
+    -- Check if a request already exists
+    IF NOT EXISTS (SELECT 1 FROM FriendRequests WHERE sender_id = sender AND receiver_id = receiver AND status = 'Pending') THEN
+        -- Insert a new friend request
+        INSERT INTO FriendRequests (sender_id, receiver_id, status)
+        VALUES (sender, receiver, 'Pending');
+    ELSE
+        -- Return a message if the request is already sent or already friends
+        SELECT 'Request already sent or already friends.' AS message;
+    END IF;
+END $$
+
+DELIMITER ;
+DELIMITER $$
+
+CREATE PROCEDURE GetUserProfiles(IN searchQuery VARCHAR(255))
+BEGIN
+    SELECT username, profile_photo
+    FROM user
+    WHERE username LIKE CONCAT('%', searchQuery, '%');
+END $$
+
+DELIMITER ;
+
+CREATE TABLE friendrequests (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
+    status ENUM('Pending', 'Accepted', 'Rejected') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+Delimiter $$
+drop procedure acceptFriendRequest;
+
+DELIMITER $$
+
+CREATE PROCEDURE acceptFriendRequest(IN request_id INT)
+BEGIN
+    DECLARE sender INT;
+    DECLARE receiver INT;
+
+    -- Get sender and receiver from friend requests
+    SELECT sender_id, receiver_id INTO sender, receiver
+    FROM friendrequests
+    WHERE id = request_id;
+
+    -- Ensure that the sender and receiver are valid and not NULL
+    IF sender IS NOT NULL AND receiver IS NOT NULL THEN
+        -- Update the status to Accepted
+        UPDATE friendrequests
+        SET status = 'Accepted'
+        WHERE id = request_id;
+
+        -- Insert into friends table (if not already exists)
+        IF NOT EXISTS (SELECT 1 FROM friends WHERE (user_id = sender AND friend_id = receiver) OR (user_id = receiver AND friend_id = sender)) THEN
+            INSERT INTO friends (user_id, friend_id)
+            VALUES (sender, receiver), (receiver, sender);
+        END IF;
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid sender or receiver';
+    END IF;
+END $$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE TRIGGER after_accept_request
+AFTER UPDATE ON friendrequests
+FOR EACH ROW
+BEGIN
+    IF NEW.status = 'Accepted' THEN
+        -- Check if the friendship already exists
+        IF NOT EXISTS (
+            SELECT 1 FROM friends 
+            WHERE (user_id = NEW.sender_id AND friend_id = NEW.receiver_id) 
+               OR (user_id = NEW.receiver_id AND friend_id = NEW.sender_id)
+        ) THEN
+            -- Insert the friendship in both directions
+            INSERT INTO friends (user_id, friend_id)
+            VALUES (NEW.receiver_id, NEW.sender_id), (NEW.sender_id, NEW.receiver_id);
+        END IF;
+    END IF;
+END $$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+DELIMITER $$
+
+CREATE PROCEDURE acceptFriendRequest(IN request_id INT)
+BEGIN
+    DECLARE sender INT;
+    DECLARE receiver INT;
+
+    -- Get sender and receiver from friend requests
+    SELECT sender_id, receiver_id INTO sender, receiver
+    FROM friendrequests
+    WHERE id = request_id;
+
+    -- Update the status to Accepted
+    UPDATE friendrequests
+    SET status = 'Accepted'
+    WHERE id = request_id;
+
+    -- Insert into friends table
+    INSERT INTO friends (user_id, friend_id)
+    VALUES (receiver, sender), (sender, receiver);
+END $$
+
+DELIMITER ;
+DELIMITER $$
+
+CREATE TRIGGER after_accept_request
+AFTER UPDATE ON friendrequests
+FOR EACH ROW
+BEGIN
+    IF NEW.status = 'Accepted' THEN
+        INSERT INTO friends (user_id, friend_id)
+        VALUES (NEW.receiver_id, NEW.sender_id), (NEW.sender_id, NEW.receiver_id);
+    END IF;
+END $$
+
+DELIMITER ;
+
+CREATE TABLE friends (
+    user_id INT,
+    friend_id INT,
+    FOREIGN KEY (user_id) REFERENCES User(id),
+    FOREIGN KEY (friend_id) REFERENCES User(id),
+    PRIMARY KEY (friend_id, user_id)
+);
+
+
+DELIMITER $$
+
+CREATE TRIGGER log_successful_login 
+AFTER UPDATE ON User 
+FOR EACH ROW 
+BEGIN
+    IF OLD.password = NEW.password THEN
+        -- Insert the successful login attempt into the login attempts table
+        INSERT INTO Login_Attempts (user_id, attempt_time, status)
+        VALUES (NEW.id, NOW(), 'SUCCESS');
+    END IF;
+END$$
+
+DELIMITER ;
+select * from Login_Attempts;
+
+CREATE TABLE Login_Attempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NULL,
+    attempt_time DATETIME NOT NULL,
+    status ENUM('SUCCESS', 'FAILURE') NOT NULL,
+
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL
+);
+use Mybook;
+
+DELIMITER $$
+
+CREATE PROCEDURE GetPendingFriendRequests(
+    IN receiverId INT
+)
+BEGIN
+    SELECT 
+        fr.request_id, 
+        fr.sender_id, 
+        fr.request_status, 
+        u.username, 
+        u.profile_photo
+    FROM 
+        friend_requests fr
+    JOIN 
+        user u 
+    ON 
+        fr.sender_id = u.id
+    WHERE 
+        fr.receiver_id = receiverId  -- Use the parameter directly here
+        AND fr.request_status = 'pending';
+END$$
+
+DELIMITER ;
+
+
+CALL GetPendingFriendRequests(5);
+UPDATE friend_requests
+SET request_status = 'Accepted'
+WHERE request_id = 1;
+
+CALL GetPendingFriendRequests(6);  -- Pass the receiver ID as a parameter
+
+
+
+-- Create the posts table
+CREATE TABLE posts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL, -- Foreign key referencing the user table
+    content TEXT NOT NULL, -- Content of the post
+    media_url VARCHAR(255), -- URL for an image or video (optional)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp of post creation
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
+);
+
+
+DELIMITER $$
+
+CREATE PROCEDURE GetPostsByUserId(IN userId INT)
+BEGIN
+    SELECT 
+        p.id AS post_id,
+        u.username,
+        u.profile_photo,
+        p.content,
+        p.media_url,
+        p.created_at
+    FROM posts p
+    JOIN user u ON p.user_id = u.id
+    WHERE p.user_id = userId
+    ORDER BY p.created_at DESC;
+END $$
+
+DELIMITER ;
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE GetPostsByUserId(IN userId INT)
+BEGIN
+    IF userId IS NOT NULL THEN
+        SELECT 
+            p.id AS post_id,
+            u.username,
+            u.profile_photo,
+            p.content,
+            p.media_url,
+            p.created_at
+        FROM posts p
+        JOIN user u ON p.user_id = u.id
+        WHERE p.user_id = userId
+        ORDER BY p.created_at DESC;
+    ELSE
+        SELECT 
+            p.id AS post_id,
+            u.username,
+            u.profile_photo,
+            p.content,
+            p.media_url,
+            p.created_at
+        FROM posts p
+        JOIN user u ON p.user_id = u.id
+        ORDER BY p.created_at DESC;
+    END IF;
+END $$
+
+DELIMITER ;
+DELIMITER $$
+CREATE PROCEDURE RegisterUser(
+    IN p_username VARCHAR(255),
+    IN p_password VARCHAR(255),
+    IN p_email VARCHAR(255),
+    IN p_profilePhoto VARCHAR(255),
+    IN p_coverPhoto VARCHAR(255),
+    IN p_bio text
+)
+BEGIN
+    -- Check if username already exists
+    IF EXISTS (SELECT * FROM user WHERE username = p_username) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Username already exists';
+    ELSE
+        -- Insert new user with profile and cover photo URLs
+        INSERT INTO user (username, password, email, profile_photo, cover_photo,bio )
+        VALUES (p_username, p_password, p_email, IFNULL(p_profilePhoto, 'default_profile.jpg'), IFNULL(p_coverPhoto, 'default_cover.jpg'),p_bio);
+    END IF;
+END $$
+
+
+
+CREATE TABLE user (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL, -- To store the hashed password
+    profile_photo TEXT,
+    cover_photo TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+DELIMITER $$
+
+CREATE PROCEDURE GetUserById(IN userId INT)
+BEGIN
+    SELECT 
+        username, 
+        email, 
+        profile_photo, 
+        cover_photo, 
+        created_at
+    FROM user
+    WHERE id = userId;
+END$$
+
+DELIMITER ;
+DELIMITER $$
+
+CREATE PROCEDURE get_notifications()
+BEGIN
+    SELECT message
+    FROM notifications
+    ORDER BY createdAt DESC;
+END$$
+
+DELIMITER ;
+
+CALL get_notifications();
+
+
+
+
+
+
+
+
+
+

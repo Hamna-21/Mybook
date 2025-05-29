@@ -1,0 +1,74 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body and General Layout */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+    width: 80%;
+    max-width: 1200px;
+    text-align: center;
+}
+
+/* Title */
+h1 {
+    margin-bottom: 30px;
+    color: #333;
+}
+
+/* Frame for Each Graph */
+.frame {
+    background-color: white;
+    margin: 15px;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Title for Each Frame */
+.frame h3 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+/* Graph Placeholder Styling */
+.graph-placeholder {
+    height: 300px;
+    background-color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    color: #888;
+    font-size: 1rem;
+}
+
+.graph-placeholder p {
+    color: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-container {
+        width: 95%;
+    }
+
+    .frame {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}

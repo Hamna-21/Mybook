@@ -1,0 +1,153 @@
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- Unique identifier for each user
+    username VARCHAR(50) NOT NULL,      -- Username of the user
+    profile_photo VARCHAR(255),          -- URL of the user's profile photo
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Timestamp of when the user was created
+);
+CREATE TABLE Posts (
+    Post_Id INT AUTO_INCREMENT PRIMARY KEY, -- Corrected column definition
+    user_id INT NOT NULL,
+    context_text TEXT NOT NULL,             -- Changed to TEXT for storing larger content
+    image_url VARCHAR(255),                 -- Path to the image (optional)
+    video_url VARCHAR(255),                 -- Path to the video (optional)
+    post_date DATETIME DEFAULT CURRENT_TIMESTAMP, -- Default timestamp for post creation
+    FOREIGN KEY (user_id) REFERENCES Users(id) -- Foreign key reference to Users table
+);
+INSERT INTO users (id, username, profile_photo)
+VALUES (1, 'User1', 'https://example.com/profile1.jpg');
+
+INSERT INTO users (id, username, profile_photo)
+VALUES (2, 'User2', 'https://example.com/profile2.jpg');
+
+INSERT INTO users (id, username, profile_photo)
+VALUES (3, 'User3', 'https://example.com/profile3.jpg');
+
+
+-- Insert a quote by Albert Einstein
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (1, 'Life is like riding a bicycle. To keep your balance, you must keep moving.', NULL, NULL);
+
+-- Insert a quote by Mahatma Gandhi
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (2, 'Be the change that you wish to see in the world.', NULL, NULL);
+
+-- Insert a quote by Maya Angelou
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (3, 'You will face many defeats in life, but never let yourself be defeated.', NULL, NULL);
+
+-- Insert a quote by Nelson Mandela
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (1, 'It always seems impossible until it is done.', NULL, NULL);
+
+-- Insert a quote by Steve Jobs
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (2, 'Your time is limited, so don’t waste it living someone else’s life.', NULL, NULL);
+
+-- Insert a motivational quote
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (3, 'Success is not final, failure is not fatal: It is the courage to continue that counts.', NULL, NULL);
+
+-- Insert a quote about life
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (1, 'In the end, we only regret the chances we didn’t take.', NULL, NULL);
+-- Insert a post with a quote and an image
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (1, 'Life is like riding a bicycle. To keep your balance, you must keep moving.', 'https://tse1.mm.bing.net/th?id=OIP.VvO7Lx-kEmCusIdeG-ZWHAHaKe&pid=Api&P=0&h=220', NULL);
+
+-- Insert a post with a quote and an image
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (2, 'Be the change that you wish to see in the world.', 'https://tse2.mm.bing.net/th?id=OIP.HHdhONq2EQEWAdWgmLSOgAHaEo&pid=Api&P=0&h=220', NULL);
+
+-- Insert a post with a motivational quote and an image
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (3, 'Success is not final, failure is not fatal: It is the courage to continue that counts.', 'https://tse3.mm.bing.net/th?id=OIP.snUTpTJ-qbH-HTKyd4lK6QHaEK&pid=Api&P=0&h=220', NULL);
+
+-- Insert a post with a quote and an image
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (1, 'It always seems impossible until it is done.', 'https://img.freepik.com/free-vector/impossible-is-possible-concept_49683-3593.jpg?size=626&ext=jpg', NULL);
+
+-- Insert a post with a quote and an image
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (2, 'Your time is limited, so don’t waste it living someone else’s life.', 'https://tse1.mm.bing.net/th?id=OIP.VP4okbUW3CNB1n4bk2M0LwHaHa&pid=Api&P=0&h=220', NULL);
+
+
+-- Insert a post with a personal reflection and an image
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (3, 'In the end, we only regret the chances we didn’t take.', 'http://example.com/regret_quote.jpg', NULL);
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (1, ' اے بے خبر جزا کی تمنا بھی چھوڑ دے  سودا گری نہیں یہ عبادت خدا کی ہے', 'https://tse3.mm.bing.net/th?id=OIP.L3Qyc0Q-vQFqB1CM-6F_bAAAAA&pid=Api&P=0&h=220', NULL);
+-- Insert a post with a quote, an image, and a video URL related to Pakistan
+INSERT INTO posts (user_id, content, image_url, video_url)
+VALUES (1, 'Exploring the beautiful landscapes of Pakistan!', null, 'https://youtu.be/ybcZQxpTrCs?si=MDLg2DzqKmQNBdS0');
+INSERT INTO posts (user_id, content, image_url, video_url)
+VALUES (5, 'Main Khud Gharz Nahi Mery Anso Parakh Kar Dekho
+Mughe Fiker-E-Chaman Hai Gham-E-Ashyan Nahi', null, 'https://youtu.be/2lCK6pofXEs?si=aNUUIxdIGn7Rjo7b');
+INSERT INTO posts (user_id, content, image_url, video_url)
+VALUES (7, 'Red roses bloom in the gardens of Shalimar,
+Green fields sway in the breeze from afar.
+The melodies of Sufi music fill the air,
+Pakistan, a country beyond compare.', null, 'https://youtu.be/HgBFtoiEsh4?si=LCsm8nwMi1fes-WN');
+
+select* from posts;
+ select*from post_log;
+
+CREATE TABLE post_log (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    post_id INT,
+    user_id INT,
+    log_message VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+DELIMITER $$
+
+CREATE TRIGGER before_post_insert
+BEFORE INSERT ON posts
+FOR EACH ROW
+BEGIN
+    -- Example of modifying data before insert
+    SET NEW.context_text = CONCAT(NEW.context_text, ' - This post has been modified.');
+    
+    -- Insert a log into the post_log table
+    INSERT INTO post_log (post_id, user_id, log_message)
+    VALUES (NEW.Post_Id, NEW.user_id, CONCAT('About to insert post with ID ', NEW.Post_Id, ' by User ', NEW.user_id));
+END $$
+
+DELIMITER ;
+DELIMITER $$
+
+CREATE TRIGGER after_post_insert
+AFTER INSERT ON posts
+FOR EACH ROW
+BEGIN
+    -- Insert a log message indicating that the post has been created
+    INSERT INTO post_log (post_id, user_id, log_message)
+    VALUES (NEW.Post_Id, NEW.user_id, 'Posted');
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE UpdatePost(
+    IN post_id INT,
+    IN new_content TEXT,
+    IN new_image_url VARCHAR(255),
+    IN new_video_url VARCHAR(255)
+)
+BEGIN
+    -- Update the post content in the Posts table
+    UPDATE Posts
+    SET content_text = new_content,
+        image_url = new_image_url,
+        video_url = new_video_url
+    WHERE Post_Id = post_id;
+
+    -- Log the update action in the Log table
+    INSERT INTO Log (action, post_id, created_at)
+    VALUES ('Post Updated', post_id, NOW());
+
+    -- Optionally, return a success message or updated post ID
+    SELECT 'Post Updated Successfully' AS message, post_id AS updated_post_id;
+END$$
+
+DELIMITER ;

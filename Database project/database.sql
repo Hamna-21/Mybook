@@ -1,0 +1,643 @@
+Use Mybook;
+
+select * from user;
+
+
+
+CREATE TABLE Posts (
+    Post_Id INT AUTO_INCREMENT PRIMARY KEY, -- Corrected column definition
+    user_id INT NOT NULL,
+    context_text TEXT NOT NULL,             -- Changed to TEXT for storing larger content
+    image_url VARCHAR(255),                 -- Path to the image (optional)
+    video_url VARCHAR(255),                 -- Path to the video (optional)
+    post_date DATETIME DEFAULT CURRENT_TIMESTAMP, -- Default timestamp for post creation
+    FOREIGN KEY (user_id) REFERENCES Users(id) -- Foreign key reference to Users table
+);
+INSERT INTO users (id, username, profile_photo)
+VALUES (1, 'User1', 'https://example.com/profile1.jpg');
+
+INSERT INTO users (id, username, profile_photo)
+VALUES (2, 'User2', 'https://example.com/profile2.jpg');
+
+INSERT INTO users (id, username, profile_photo)
+VALUES (3, 'User3', 'https://example.com/profile3.jpg');
+
+
+-- Insert a quote by Albert Einstein
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (1, 'Life is like riding a bicycle. To keep your balance, you must keep moving.', NULL, NULL);
+
+-- Insert a quote by Mahatma Gandhi
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (2, 'Be the change that you wish to see in the world.', NULL, NULL);
+
+-- Insert a quote by Maya Angelou
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (3, 'You will face many defeats in life, but never let yourself be defeated.', NULL, NULL);
+
+-- Insert a quote by Nelson Mandela
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (1, 'It always seems impossible until it is done.', NULL, NULL);
+
+-- Insert a quote by Steve Jobs
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (2, 'Your time is limited, so don’t waste it living someone else’s life.', NULL, NULL);
+
+-- Insert a motivational quote
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (3, 'Success is not final, failure is not fatal: It is the courage to continue that counts.', NULL, NULL);
+
+-- Insert a quote about life
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (1, 'In the end, we only regret the chances we didn’t take.', NULL, NULL);
+-- Insert a post with a quote and an image
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (1, 'Life is like riding a bicycle. To keep your balance, you must keep moving.', 'https://tse1.mm.bing.net/th?id=OIP.VvO7Lx-kEmCusIdeG-ZWHAHaKe&pid=Api&P=0&h=220', NULL);
+
+-- Insert a post with a quote and an image
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (2, 'Be the change that you wish to see in the world.', 'https://tse2.mm.bing.net/th?id=OIP.HHdhONq2EQEWAdWgmLSOgAHaEo&pid=Api&P=0&h=220', NULL);
+
+-- Insert a post with a motivational quote and an image
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (3, 'Success is not final, failure is not fatal: It is the courage to continue that counts.', 'https://tse3.mm.bing.net/th?id=OIP.snUTpTJ-qbH-HTKyd4lK6QHaEK&pid=Api&P=0&h=220', NULL);
+
+-- Insert a post with a quote and an image
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (1, 'It always seems impossible until it is done.', 'https://img.freepik.com/free-vector/impossible-is-possible-concept_49683-3593.jpg?size=626&ext=jpg', NULL);
+
+-- Insert a post with a quote and an image
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (2, 'Your time is limited, so don’t waste it living someone else’s life.', 'https://tse1.mm.bing.net/th?id=OIP.VP4okbUW3CNB1n4bk2M0LwHaHa&pid=Api&P=0&h=220', NULL);
+
+
+-- Insert a post with a personal reflection and an image
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (3, 'In the end, we only regret the chances we didn’t take.', 'http://example.com/regret_quote.jpg', NULL);
+INSERT INTO posts (user_id, context_text, image_url, video_url)
+VALUES (1, ' اے بے خبر جزا کی تمنا بھی چھوڑ دے  سودا گری نہیں یہ عبادت خدا کی ہے', 'https://tse3.mm.bing.net/th?id=OIP.L3Qyc0Q-vQFqB1CM-6F_bAAAAA&pid=Api&P=0&h=220', NULL);
+-- Insert a post with a quote, an image, and a video URL related to Pakistan
+INSERT INTO posts (user_id, content, image_url, video_url)
+VALUES (1, 'Exploring the beautiful landscapes of Pakistan!', null, 'https://youtu.be/ybcZQxpTrCs?si=MDLg2DzqKmQNBdS0');
+INSERT INTO posts (user_id, content, image_url, video_url)
+VALUES (5, 'Main Khud Gharz Nahi Mery Anso Parakh Kar Dekho
+Mughe Fiker-E-Chaman Hai Gham-E-Ashyan Nahi', null, 'https://youtu.be/2lCK6pofXEs?si=aNUUIxdIGn7Rjo7b');
+INSERT INTO posts (user_id, content, image_url, video_url)
+VALUES (7, 'Red roses bloom in the gardens of Shalimar,
+Green fields sway in the breeze from afar.
+The melodies of Sufi music fill the air,
+Pakistan, a country beyond compare.', null, 'https://youtu.be/HgBFtoiEsh4?si=LCsm8nwMi1fes-WN');
+
+select* from posts;
+ select*from post_log;
+
+CREATE TABLE post_log (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    post_id INT,
+    user_id INT,
+    log_message VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+DELIMITER $$
+
+CREATE TRIGGER before_post_insert
+BEFORE INSERT ON posts
+FOR EACH ROW
+BEGIN
+    -- Example of modifying data before insert
+    SET NEW.context_text = CONCAT(NEW.context_text, ' - This post has been modified.');
+    
+    -- Insert a log into the post_log table
+    INSERT INTO post_log (post_id, user_id, log_message)
+    VALUES (NEW.Post_Id, NEW.user_id, CONCAT('About to insert post with ID ', NEW.Post_Id, ' by User ', NEW.user_id));
+END $$
+
+DELIMITER ;
+DELIMITER $$
+
+CREATE TRIGGER after_post_insert
+AFTER INSERT ON posts
+FOR EACH ROW
+BEGIN
+    -- Insert a log message indicating that the post has been created
+    INSERT INTO post_log (post_id, user_id, log_message)
+    VALUES (NEW.Post_Id, NEW.user_id, 'Posted');
+END $$
+
+DELIMITER ;
+
+use Mybook;
+select * from notifications;
+DELIMITER $$
+
+CREATE PROCEDURE get_notifications()
+BEGIN
+    SELECT message
+    FROM notifications
+    ORDER BY createdAt DESC;
+END$$
+
+DELIMITER ;
+
+CALL get_notifications();
+use Mybook;
+
+INSERT INTO notifications (message) 
+VALUES 
+    ('Welcome to the platform!'),
+    ('Your profile was viewed 5 times'),
+    ('New features are available in INSERT INTO notifications (message) 
+your dashboard'),
+    ('You have 3 new messages'),
+    ('System maintenance scheduled for this weekend'),
+    ('Your subscription is expiring soon'),
+    ('A new update has been applied successfully'),
+    ('Complete your profile to get personalized recommendations'),
+    ('Congratulations on completing your first milestone!'),
+    ('New discounts available in the marketplace'),
+    ('Your account was accessed from a new device'),
+    ('Don’t miss our upcoming webinar this Thursday'),
+    ('You have earned 100 reward points!'),
+    ('We’ve updated our Terms and Conditions'),
+    ('Your recent order has been shipped!');
+TRUNCATE TABLE notifications;
+ALTER TABLE notifications
+MODIFY COLUMN createdAt DATETIME DEFAULT CURRENT_TIMESTAMP;
+INSERT INTO notifications (message) 
+VALUES 
+    ('Welcome to the platform!'),
+    ('Your profile was viewed 5 times'),
+    ('New features are available in your dashboard'),
+    ('You have 3 new messages'),
+    ('System maintenance scheduled for this weekend'),
+    ('Your subscription is expiring soon'),
+    ('A new update has been applied successfully'),
+    ('Complete your profile to get personalized recommendations'),
+    ('Congratulations on completing your first milestone!'),
+    ('New discounts available in the marketplace'),
+    ('Your account was accessed from a new device'),
+    ('Don’t miss our upcoming webinar this Thursday'),
+    ('You have earned 100 reward points!'),
+    ('We’ve updated our Terms and Conditions'),
+    ('Your recent order has been shipped!');
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE notifications
+SET createdAt = NOW()
+WHERE createdAt IS NULL;
+SET SQL_SAFE_UPDATES = 1;
+CREATE TABLE people (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    picture_url VARCHAR(255) NOT NULL
+);
+select * from people;
+truncate table people;
+-- First, the SELECT query
+SELECT name, picture_url FROM people WHERE name LIKE '%query%';
+use Mybook;
+INSERT INTO people (name, picture_url) VALUES
+('Zainab Ali', 'C:\\Users\\pc\\Desktop\\Database project\\Profile picture\\ZAinab.jpeg'),
+('Faiza Malik', 'C:\\Users\\pc\\Desktop\\Database project\\Profile picture\\Faiza malik.jpg'),
+('Laraib Zahra', 'C:\\Users\\pc\\Desktop\\Database project\\Profile picture\\Laraib Zahra.jpg'),
+('Abdullah', 'C:\\Users\\pc\\Desktop\\Database project\\Profile picture\\Abdullah.jpg'),
+('Furqan', 'C:\\Users\\pc\\Desktop\\Database project\\Profile picture\\Furqan.jpeg'),
+('Hamna Mushtaq', 'C:\\Users\\pc\\Desktop\\Database project\\Profile picture\\Hamna Mmushtaq.jpg'),
+('Hina', 'C:\\Users\\pc\\Desktop\\Database project\\Profile picture\\Hina.jpg'),
+('Sara Amin', 'C:\\Users\\pc\\Desktop\\Database project\\Profile picture\\Sara amin.jpg'),
+('Ali Ahmed', 'https://tse2.mm.bing.net/th?id=OIP.lsd2vJ9IR6cpHtE-QfEYawHaMh&pid=Api&P=0&h=220'),
+('Ayesha Khan', 'https://tse4.mm.bing.net/th?id=OIP.E0nj2zjvOZArF6WcrPOusAHaL5&pid=Api&P=0&h=220'),
+('Muneeb Ali', 'https://cdna.artstation.com/p/assets/images/images/056/061/482/large/adnan-ahmed-finaaaal.jpg?1668383844'),
+('Madiha Noor', 'https://tse2.mm.bing.net/th?id=OIP.6KFkb_-0ic6_5lGhl6FxKAHaE8&pid=Api&P=0&h=220'),
+('Ahmed Shah', 'https://tse1.mm.bing.net/th?id=OIP.0vNuTyTzf4LnqNZT40jjgQHaDp&pid=Api&P=0&h=220'),
+('Kiran Tariq', 'https://tse4.mm.bing.net/th?id=OIP.KUWjByTKPv8ZkPcRInC3zwHaHa&pid=Api&P=0&h=220'),
+('Raza Ali', 'https://tse4.mm.bing.net/th?id=OIP.1b-GpcCf6-Nm3xvKeO8w4AHaEl&pid=Api&P=0&h=220'),
+('Sana Shahid', 'https://wallpaperaccess.com/full/1654006.jpg'),
+('Usman Javed', 'https://tse2.mm.bing.net/th?id=OIP.FKsK9QqfnzvTNNvC3I5BOQHaEo&pid=Api&P=0&h=220'),
+('Mahira Khan', 'https://tse1.mm.bing.net/th?id=OIP.8obkcZaAnK2uA5p8WVlEXwHaHC&pid=Api&P=0&h=220'),
+('Sohail Khan', 'https://tse2.mm.bing.net/th?id=OIP.pqoWKSD0VFBdGjGclgOEkQHaE8&pid=Api&P=0&h=220'),
+('Zain Shah', 'https://tse3.mm.bing.net/th?id=OIP.l0ND1yemfX9l5oJnWHpJ-AHaD5&pid=Api&P=0&h=220'),
+('Ammar Javed', 'https://tse3.mm.bing.net/th?id=OIP.hklDlSE-Y14OvCUl8bCi7QHaEo&pid=Api&P=0&h=220'),
+('Nida Rehman', 'https://tse4.mm.bing.net/th?id=OIP._qcop72b8hn-JnXKdHwhFAAAAA&pid=Api&P=0&h=220'),
+('Yasir Malik', 'https://tse4.mm.bing.net/th?id=OIP._rjFt4iH5QybkUAum74_3gHaEe&pid=Api&P=0&h=220'),
+('Adeel Zafar', 'https://tse2.mm.bing.net/th?id=OIP.p0Pk1824Z8UydGsBIdNrcwHaEr&pid=Api&P=0&h=220'),
+('Kashif Iqbal', 'https://tse3.mm.bing.net/th?id=OIP.BTOJjTRxHLIdjbcmNbwjSQHaJ4&pid=Api&P=0&h=220'),
+('Lubna Sarfraz', 'https://tse1.mm.bing.net/th?id=OIP.mxgu2pfmQXY4hZCHRYllmQHaIn&pid=Api&P=0&h=220'),
+('Muneeba Malik', 'https://tse2.mm.bing.net/th?id=OIP.HVzfKiHzdmAE-TwPDpccNwHaE-&pid=Api&P=0&h=220'),
+('Shahzaib Ali', 'https://tse2.mm.bing.net/th?id=OIP.j-S3-NgZBqHZ_l2go7782wHaG-&pid=Api&P=0&h=220'),
+('Fariha Khan', 'https://tse2.mm.bing.net/th?id=OIP.Kj61mwBg1Uj5xYTnKb0l1gHaMc&pid=Api&P=0&h=220'),
+('Sana Saeed', 'https://tse2.mm.bing.net/th?id=OIP.rqBK1FyfvJB9_bste6db1wHaEo&pid=Api&P=0&h=220'),
+('Tariq Mehmood', 'https://tse1.mm.bing.net/th?id=OIP.5uR1KDa7ojrZLL0n7CUj6QHaEK&pid=Api&P=0&h=220'),
+('Rida Batool', 'https://tse1.mm.bing.net/th?id=OIP.UDISw74sKqQgv8lTHI43qAAAAA&pid=Api&P=0&h=220'),
+('Zeeshan Aslam', 'https://tse3.mm.bing.net/th?id=OIP.Zn3biNXJSVpfMEpinX2rawHaE8&pid=Api&P=0&h=220'),
+('Mariam Nasir', 'https://tse3.mm.bing.net/th?id=OIP.JaBzhXXihi19AKo-5_DQ8wHaEo&pid=Api&P=0&h=220'),
+('Sufyan Ali', 'https://tse3.mm.bing.net/th?id=OIP.Zn3biNXJSVpfMEpinX2rawHaE8&pid=Api&P=0&h=220'),
+('Samina Ahmad', 'https://tse3.mm.bing.net/th?id=OIP.pfZxiR9LUMGIXNRHqaY2KAHaEK&pid=Api&P=0&h=220'),
+('Owais Jameel', 'https://tse1.mm.bing.net/th?id=OIP.xYx8h_xbYu0sXQXDHE31uwHaEo&pid=Api&P=0&h=220'),
+('Shafqat Ali', 'https://tse3.mm.bing.net/th?id=OIP.cAYp2CLe0UM1n1tYouNi3gHaEo&pid=Api&P=0&h=220'),
+('Nashit Khan', 'https://tse1.mm.bing.net/th?id=OIP.PMYwZZ5xGZUxTz2eD0MJzQHaEo&pid=Api&P=0&h=220'),
+('Bushra Tariq', 'https://tse4.mm.bing.net/th?id=OIP.A_mZoT4Tii7BJNI8eHkPUgHaEK&pid=Api&P=0&h=220'),
+('Nashit Malik', 'https://tse4.mm.bing.net/th?id=OIP.KSoJA9f7ezf9sJHvgdWCsQHaEK&pid=Api&P=0&h=220'),
+('Quratul Ain', 'https://tse2.mm.bing.net/th?id=OIP.uz7pe590gEwLA-iOQ-ny-AHaHg&pid=Api&P=0&h=220'),
+('Tariq Mehmood', 'https://tse2.mm.bing.net/th?id=OIP.uz7pe590gEwLA-iOQ-ny-AHaHg&pid=Api&P=0&h=220'),
+('Zafar Iqbal', 'https://tse2.mm.bing.net/th?id=OIP.6WRK5RdqLt8uXaHxTBYqXwHaHa&pid=Api&P=0&h=220'),
+('Nazia Alam','https://tse1.mm.bing.net/th?id=OIP.a7onZguGTSUgvs_g7rWDMAHaJQ&pid=Api&P=0&h=220'),
+('Mishal Javed', 'https://tse1.mm.bing.net/th?id=OIP.rssZTLPCMy3YlSRwuwAl5QHaIz&pid=Api&P=0&h=220'),
+('Fariha Ahmed', 'https://tse3.mm.bing.net/th?id=OIP.fGErS435ZChI8HbiNnlXUgAAAA&pid=Api&P=0&h=220'),
+('Asim Iqbal', 'https://tse4.mm.bing.net/th?id=OIP.A8qTSU_Zm3wBWjHzX8n5AQHaEK&pid=Api&P=0&h=220'),
+('Saba Karim', 'https://tse2.mm.bing.net/th?id=OIP.Eg1NK7-bYL3hdKGROkz9rAHaE7&pid=Api&P=0&h=220'),
+('Sara Qureshi', 'https://i.pinimg.com/originals/19/a0/44/19a04444451ebed20d4636ea6b448738.jpg'),
+('Imran Raza', 'https://tse3.mm.bing.net/th?id=OIP.LvjnqEoqU0XHGUA3TEMbIwHaEK&pid=Api&P=0&h=220'),
+('Asma Shakir', 'https://tse3.mm.bing.net/th?id=OIP.N80EU0-IyrdFjDKByT5DTQHaE-&pid=Api&P=0&h=220'),
+('Areeba Mehmood', 'https://1.bp.blogspot.com/-YKUfhG4Czyc/YKHB-hq5NgI/AAAAAAAAXSo/VXZEH6v5wugk-PaNveeqBqZgZMJvahHZgCNcBGAsYHQ/s900/awesome%2Bdpz%2Bfor%2Bgirlz%2Binstagram%2Bwhatsapp%2Bdownload%2B%252824%2529.jpeg'),
+('Qasim Nawaz', 'https://i.pinimg.com/originals/66/55/ab/6655abb0639de525538a61d8f23251ba.jpg'),
+('Anam Naz', 'https://tse1.mm.bing.net/th?id=OIP.SHDY5ERngQnifadyKcw51wHaJv&pid=Api&P=0&h=220'),
+('Maqbool Ahmed', 'https://i.ytimg.com/vi/tPHLfuV1yHI/maxresdefault.jpg'),
+('Shahida Rahman', 'https://tse3.mm.bing.net/th?id=OIP.MC2pV770vt4V_F98JvpVCwHaHa&pid=Api&P=0&h=220'),
+('Rehan Bashir', 'https://i.pinimg.com/originals/9c/fd/4f/9cfd4fec14bfb9bdeef11494720636ec.jpg'),
+('Alina Saleem', 'https://tse3.mm.bing.net/th?id=OIP.ZY47gPT31YamIT0YxqBcbAHaFj&pid=Api&P=0&h=220'),
+('Ayesha', 'https://tse4.mm.bing.net/th?id=OIP.NA-Ay5UKic2FtIHGKPv6NAHaER&pid=Api&P=0&h=220'),
+('Ali Raza', 'https://wallpapercave.com/wp/wp5134512.jpg'),
+('Nashit Usman', 'https://tse1.mm.bing.net/th?id=OIP.f91BbGBAUXESbBu-ReQlAwHaDt&pid=Api&P=0&h=2200'),
+('Shahida Munir', 'https://i.ytimg.com/vi/XdgnisCKpv8/maxresdefault.jpg'),
+('Adeel Khan', 'https://tse1.mm.bing.net/th?id=OIP.k6W2omVZZvqXgpFSvDm2tgHaKg&pid=Api&P=0&h=220'),
+('Sana Iqbal', 'http://www.youloveit.ru/uploads/gallery/main/613/masha_bear64.jpg'),
+('Hassan Ali', 'https://i.pinimg.com/736x/83/04/f7/8304f71347c39cd6f247ec21e0a1c8cf.jpg'),
+('Javeria Nasir', 'https://www.unigreet.com/wp-content/uploads/2020/09/cartoon-instagram-dp.jpg'),
+('Faizan Ali', 'https://i.pinimg.com/736x/94/4f/dd/944fdd6f80e33a0fa521b336eca76c1f.jpg'),
+('Rabia Tariq', 'https://i.ytimg.com/vi/6aHB9fHLz20/maxresdefault.jpg'),
+('Abid Ali', 'https://i.pinimg.com/originals/47/28/32/472832fcf5f9b7f5aa8ef5deab513229.jpg'),
+('Khadija Hassan', 'https://lh3.googleusercontent.com/5xODDyEUYrIS2CUOO5kbEl4nm0mnMbXsPevA0rAo8Zafcaxp-KFvG9fTBvhxFHgytR1lfO6YACe479_6Da_OUzAGOndkuSpr=w960-rj-nu-e365'),
+('Muneeb Ur Rehman', 'https://tse1.mm.bing.net/th?id=OIP.N3MkDwIRxuaTZ8hZLZ19BgHaFO&pid=Api&P=0&h=220'),
+('Sadia Aslam', 'https://static.vecteezy.com/system/resources/previews/013/488/831/original/cute-baby-monkey-cartoon-sitting-vector.jpg'),
+('Imran Khan', 'https://www.success.com/wp-content/uploads/legacy/sites/default/files/9_15.jpg'),
+('Maliha Noor', 'https://republicquote.com/wp-content/uploads/2021/03/16.jpg'),
+('Shamsa Ali', 'https://tse3.mm.bing.net/th?id=OIP.QmyEMhQOSeHITGwNlU2AYQAAAA&pid=Api&P=0&h=220'),
+('Zain Iqbal', 'https://tse1.mm.bing.net/th?id=OIP.ytPSXzh6MgeYHd4Q_DR6PgHaEK&pid=Api&P=0&h=220'),
+('Hassan Shah', 'https://tse3.mm.bing.net/th?id=OIP.Al80l2kuXkCr02ubcaLJ5AAAAA&pid=Api&P=0&h=220'),
+('Fatima Raza', 'https://tse2.mm.bing.net/th?id=OIP.OF5qFrlw_cx5DCO2eKds1wHaEo&pid=Api&P=0&h=220');
+INSERT INTO people (name, picture_url) VALUES
+('Khansa Farooq', 'https://cdn.pixabay.com/photo/2020/05/17/20/21/cat-5183427_1280.jpg');
+
+
+CREATE TABLE user (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL, -- To store the hashed password
+    profile_photo TEXT,
+    cover_photo TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+DELIMITER $$
+
+CREATE PROCEDURE GetUserById(IN userId INT)
+BEGIN
+    SELECT 
+        username, 
+        email, 
+        profile_photo, 
+        cover_photo, 
+        created_at
+    FROM user
+    WHERE id = userId;
+END$$
+
+DELIMITER ;
+
+
+use Mybook;
+SELECT * FROM USER;
+-- Insert 50 users with plain text passwords
+INSERT INTO user (username, email, password, profile_photo, cover_photo)
+VALUES
+('Hamna Mushtaq', 'hamna.mushtaq@example.com', 'password1', 'https://tse1.mm.bing.net/th?id=OIP.9hn3qe51lhWH-fSxWFmTLAHaJ9&pid=Api&P=0&h=220', 'C:\\Users\\pc\\Desktop\\Database project\\public\\COVER.JPG'),
+('Khansa Farooq', 'khansa.farooq@example.com', 'password2', 'https://cdn.pixabay.com/photo/2020/05/17/20/21/cat-5183427_1280.jpg', 'https://i.pinimg.com/originals/d3/22/d1/d322d1deba703bc33d355dd991854d5b.jpg'),
+('Faiza Malik', 'faiza.malik@example.com', 'password3', 'C:\\Users\\pc\\Desktop\\Database project\\Profile picture\\Faiza malik.jpg', 'https://images.pexels.com/photos/4068151/pexels-photo-4068151.jpeg?auto=compress&cs=tinysrgb&w=600'),
+('Laraib Zahra', 'laraib.zahra@example.com', 'password4', 'C:\\Users\\pc\\Desktop\\Database project\\Profile picture\\Laraib Zahra.jpg', 'https://images.pexels.com/photos/268941/pexels-photo-268941.jpeg?auto=compress&cs=tinysrgb&w=600'),
+('Zainab Ali', 'zainab.ali@example.com', 'password5', 'C:\\Users\\pc\\Desktop\\Database project\\Profile picture\\ZAinab.jpeg', 'https://images.pexels.com/photos/1599899/pexels-photo-1599899.jpeg?auto=compress&cs=tinysrgb&w=600'),
+('Manal Aslam', 'manal.aslam@example.com', 'password6', 'https://cdn.pixabay.com/photo/2022/11/10/20/43/cat-7583672_640.jpg', 'https://images.pexels.com/photos/1235542/pexels-photo-1235542.jpeg?auto=compress&cs=tinysrgb&w=600'),
+('Rimsha Irfan', 'rimsha.irfan@example.com', 'password7', 'https://images.pexels.com/photos/1079783/pexels-photo-1079783.jpeg?auto=compress&cs=tinysrgb&w=600', 'https://images.pexels.com/photos/956981/milky-way-starry-sky-night-sky-star-956981.jpeg?auto=compress&cs=tinysrgb&w=600'),
+('Sara Amin', 'sara.amin@example.com', 'password8', 'https://i.pinimg.com/originals/dc/e7/91/dce7915ba0c362c24426eccd27a00929.jpg', 'https://images.pexels.com/photos/774043/pexels-photo-774043.jpeg?auto=compress&cs=tinysrgb&w=600'),
+('Ayesha Naseer', 'ayesha.naseer@example.com', 'password9', 'https://tse1.mm.bing.net/th?id=OIP.GAfYauEUVDXEV46dwvOk0AHaHa&pid=Api&P=0&h=220', 'https://images.pexels.com/photos/1765033/pexels-photo-1765033.jpeg?auto=compress&cs=tinysrgb&w=600'),
+('Ahmed Khan', 'ahmed.khan@example.com', 'password10', 'https://cdn.pixabay.com/photo/2022/03/14/15/39/skull-7068431_640.png', 'https://images.pexels.com/photos/325185/pexels-photo-325185.jpeg?auto=compress&cs=tinysrgb&w=600'),
+('Hassan Ali', 'hassan.ali@example.com', 'password11', 'https://lh3.googleusercontent.com/g8KUOkSB23xK2S_A4ixY4h69ABp9ULp-OnNTl7yyKEUHO-mlR1SPKUUet7XZReIISIuQpaxSVsinkFG3N4xzJ_dnsLm_lBnu%3dw1600-rj', 'https://images.pexels.com/photos/1536314/pexels-photo-1536314.jpeg?auto=compress&cs=tinysrgb&w=600'),
+('Aiman Tariq', 'aiman.tariq@example.com', 'password12', 'https://wallpapercave.com/wp/wp2058271.jpg', 'https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=600');
+INSERT INTO user (username, email, password, profile_photo, cover_photo)
+VALUES
+('Asad Rehman', 'asad.rehman@example.com', 'password13', 'https://cdn.pixabay.com/photo/2022/12/08/23/11/ai-generated-7644202_640.jpg', 'https://tse1.mm.bing.net/th?id=OIP.OcxXPHvZCeMffeHru2dCowHaCv&pid=Api&P=0&h=220'),
+('Kiran Zafar', 'kiran.zafar@example.com', 'password14', 'https://i.pinimg.com/originals/de/85/ef/de85ef8bd7186d894ee6481214d74ca8.jpg', 'https://tse4.mm.bing.net/th?id=OIP.X0upBc_m8UmXj6ljIoQ3twHaCv&pid=Api&P=0&h=220'),
+('Bilal Hussain', 'bilal.hussain@example.com', 'password15', 'https://images.pexels.com/photos/6654927/pexels-photo-6654927.jpeg?auto=compress&cs=tinysrgb&w=600', 'https://tse4.mm.bing.net/th?id=OIP.dIGQWcIcS7pc_Y0VbW7REQHaEK&pid=Api&P=0&h=220'),
+('Ali Javed', 'ali.javed@example.com', 'password16', 'https://wallpapers.com/images/hd/cool-neon-blue-profile-picture-u9y9ydo971k9mdcf.jpg', 'https://tse2.mm.bing.net/th?id=OIP._UPpm_vJ3CY_h61CyPJIRgHaE6&pid=Api&P=0&h=220'),
+('Maira Khalid', 'maira.khalid@example.com', 'password17', 'https://wallpapercave.com/wp/wp6204784.jpg', 'https://www.wallpaperbetter.com/wallpaper/213/538/526/beautiful-cover-photos-for-facebook-2K-wallpaper.jpg'),
+('Tariq Usman', 'tariq.usman@example.com', 'password18', 'https://tse1.mm.bing.net/th?id=OIP.Jxgb9GwfTqedcxJ6yft6YQHaHu&pid=Api&P=0&h=220', 'https://tse1.mm.bing.net/th?id=OIP.AnzurCEpyLLiXVtPJaCoLwHaCv&pid=Api&P=0&h=220'),
+('Samina Qureshi', 'samina.qureshi@example.com', 'password19', 'https://wallpapers.com/images/file/pretty-profile-pictures-i1rumnm6oi0lry1s.jpg', 'https://cdn.quotesgram.com/img/45/32/1790112688-quote-on-inspirational.jpg'),
+('Usman Shah', 'usman.shah@example.com', 'password20', 'https://i.pinimg.com/originals/bc/af/18/bcaf18ce6054768da1628a939e2b4f65.jpg', 'https://www.thesimplicityhabit.com/wp-content/uploads/2022/10/Positive-Facebook-Cover-2-1024x577.jpg'),
+('Nazia Bashir', 'nazia.bashir@example.com', 'password21', 'https://images.statusfacebook.com/profile_pictures/cartoon/Cartoon_Profile_Picture07.jpg', 'http://getwallpapers.com/wallpaper/full/d/c/b/1176201-fb-wallpaper-of-cover-2560x1440-picture.jpg'),
+('Madiha Saleem', 'madiha.saleem@example.com', 'password22', 'https://tse4.mm.bing.net/th?id=OIP.lGfbOBcQpYNFeUrA-PHAVQHaIv&pid=Api&P=0&h=220', 'http://getwallpapers.com/wallpaper/full/d/c/b/1176201-fb-wallpaper-of-cover-2560x1440-picture.jpg'),
+('Sajid Malik', 'sajid.malik@example.com', 'password23', 'https://tse2.mm.bing.net/th?id=OIP.Kpa70dotZa_RorKtZEDkWQHaIs&pid=Api&P=0&h=220', 'https://i.pinimg.com/originals/3d/7d/64/3d7d64b6fa36019ce058927ace751220.jpg'),
+('Rashid Raza', 'rashid.raza@example.com', 'password24', 'https://cdn.pixabay.com/photo/2020/05/19/13/48/cartoon-5190942_1280.jpg', 'https://wallpaperaccess.com/full/1493766.jpg'),
+('Shazia Akhtar', 'shazia.akhtar@example.com', 'password25', 'https://cdn.pixabay.com/photo/2019/05/04/15/24/woman-4178302_960_720.jpg', 'https://cdn.pixabay.com/photo/2019/03/01/18/32/night-4028339_640.jpg'),
+('Omar Farooq', 'omar.farooq@example.com', 'password26', 'https://tse1.mm.bing.net/th?id=OIP.AXcNr_neRxg7iWbbSSdeAQHaE-&pid=Api&P=0&h=220', 'https://marketplace.canva.com/EAFQoTmip0k/1/0/1600w/canva-black-and-silver-star-dust-love-facebook-cover-y7AF5Z8JlWI.jpg'),
+('Amina Rizwan', 'amina.rizwan@example.com', 'password27', 'https://tse1.mm.bing.net/th?id=OIP.PnCeGE4BV3etH6BsXXcYCQHaFj&pid=Api&P=0&h=220', 'https://2.bp.blogspot.com/-vbykh1fUIVg/UXWQnzA43TI/AAAAAAAAAYk/A32uiNpi31E/s1600/Facebook+cover+(8).jpg'),
+('Zeeshan Ahmed', 'zeeshan.ahmed@example.com', 'password28', 'https://netstorage-tuko.akamaized.net/images/e96f5a14c3fd36c2.jpg', 'https://i.pinimg.com/736x/16/24/e9/1624e9c7b43384ab522aedba5469a060.jpg'),
+('Javeria Tariq', 'javeria.tariq@example.com', 'password29', 'https://tse3.mm.bing.net/th?id=OIP.Uk8ZH1MUCEbt3_-R_cE9jgHaJt&pid=Api&P=0&h=220', 'http://9cover.com/images/ccovers/508f4852c6327.jpg'),
+('Muneeb Arshad', 'muneeb.arshad@example.com', 'password30', 'https://tse1.mm.bing.net/th?id=OIP.0vNuTyTzf4LnqNZT40jjgQHaDp&pid=Api&P=0&h=220', 'https://tse4.mm.bing.net/th?id=OIP.pGvmhUUTQD5LVFXLzPApUQHaC0&pid=Api&P=0&h=220'),
+('Nashit Shah', 'nashit.shah@example.com', 'password31', 'https://i.pinimg.com/originals/82/21/05/822105d0884a18bf297424ba54ba0d73.jpg', 'http://www.7daystime.com/wp-content/uploads/2013/11/FB-Cover-Photo-Blessed.jpg'),
+('Neha Bukhari', 'neha.bukhari@example.com', 'password32', 'https://i.pinimg.com/736x/60/c4/75/60c475aae66ad945a3145a2fbca83b3b.jpg', 'http://4.bp.blogspot.com/-l7pge6-ejv8/UDTCOjSit-I/AAAAAAAACmA/5kv3TXHdCNg/s1600/safe_image.jpg');
+USE Mybook;
+INSERT INTO user (username, email, password, profile_photo, cover_photo)
+VALUES
+('Tariq Javed', 'tariq.javed@example.com', 'password33', 'https://i.pinimg.com/1200x/d3/80/17/d38017d491e7b65d8b0c3e4fc0085684.jpg', 'http://thewowstyle.com/wp-content/uploads/2015/01/Facebook-Covers-004.jpg'),
+('Hira Rashid', 'hira.rashid@example.com', 'password34', 'https://i.pinimg.com/736x/95/eb/58/95eb5896e2c6458d27350a1680da497c.jpg', 'https://tse2.mm.bing.net/th?id=OIP.1Nh9Id_Q8g4kXKE9A1UN5wHaCv&pid=Api&P=0&h=220'),
+('Nida Ansari', 'nida.ansari@example.com', 'password35', 'https://tse4.mm.bing.net/th?id=OIP.XLbkcievdwzpF_IYxYBFRQHaEK&pid=Api&P=0&h=220', 'https://tse4.mm.bing.net/th?id=OIP.X0upBc_m8UmXj6ljIoQ3twHaCv&pid=Api&P=0&h=220'),
+('Junaid Iqbal', 'junaid.iqbal@example.com', 'password36', 'https://tse4.mm.bing.net/th?id=OIP.DlnauDXLxWhO9jLMc0oNAAHaDL&pid=Api&P=0&h=220', 'https://tse2.mm.bing.net/th?id=OIP.d7on4cg3oBwKQWoxFIhNawHaEK&pid=Api&P=0&h=220'),
+('Sara Yousaf', 'sara.yousaf@example.com', 'password37', 'https://tse1.mm.bing.net/th?id=OIP.0iMR9xg8jNoshHHq5TcaKgHaGl&pid=Api&P=0&h=220', 'https://tse1.mm.bing.net/th?id=OIP._w3zgwXDtDekcsNpRF_3CQHaEK&pid=Api&P=0&h=220'),
+('Danish Khalid', 'danish.khalid@example.com', 'password38', 'https://tse1.mm.bing.net/th?id=OIP.AH0nku9X7mXUY3CdLQzL7QHaEK&pid=Api&P=0&h=220', 'https://tse3.mm.bing.net/th?id=OIP.24XJfU8_JJGolcmMWeIDjAHaEK&pid=Api&P=0&h=220'),
+('Alisha Nazir', 'alisha.nazir@example.com', 'password39', 'https://tse3.mm.bing.net/th?id=OIP.mxEjQzTbGT13USsEZstj3wHaEU&pid=Api&P=0&h=220', 'https://tse2.mm.bing.net/th?id=OIP.LwPROYizHV4wjNJOoJ5_LQHaEK&pid=Api&P=0&h=220'),
+('Nashit Khan', 'nashit.khan@example.com', 'password40', 'http://3.bp.blogspot.com/_x8-qhOy384Q/TPswNNH3CWI/AAAAAAAAAAY/_cb8p1sza0U/w1200-h630-p-k-no-nu/mickeymouse.jpg', 'https://tse3.mm.bing.net/th?id=OIP.6jlNh_Vs_6ajIzGp56xt_QHaCe&pid=Api&P=0&h=220'),
+('Shabana Akram', 'shabana.akram@example.com', 'password41', 'https://tse3.mm.bing.net/th?id=OIP.mGjMT9-b1CUWx58mtaTSdwHaHa&pid=Api&P=0&h=220', 'http://1.bp.blogspot.com/-YdQaKBaM8oU/UMM0t9PNb3I/AAAAAAAAFIM/MSC0QHpoHKM/s1600/fb+covers+(1).jpg'),
+('Samra Aziz', 'samra.aziz@example.com', 'password42', 'https://tse4.mm.bing.net/th?id=OIP.clnDQZck9hrXWascvdzufQHaHa&pid=Api&P=0&h=220', 'https://tse4.mm.bing.net/th?id=OIP.vZgYzZdp-JEy8DSOWSlxSQHaCv&pid=Api&P=0&h=220'),
+('Amina Javed', 'amina.javed@example.com', 'password43', 'https://png.pngtree.com/png-clipart/20230423/original/pngtree-alphabet-letter-a-png-image_9077319.png', 'https://tse3.mm.bing.net/th?id=OIP.J_LGUdbM1Rga0sfeA1ykUAHaCu&pid=Api&P=0&h=220'),
+('Fahad Shahzad', 'fahad.shahzad@example.com', 'password44', 'https://tse1.mm.bing.net/th?id=OIP.KpXsTE63_RkArFQ0OLpyPgHaLH&pid=Api&P=0&h=220', 'https://4.bp.blogspot.com/-w-J0bFHbcHc/UMM0u8LvT5I/AAAAAAAAFIU/vkLIzFcv_0s/s1600/fb+covers+(2).jpg'),
+('Shamim Khan', 'shamim.khan@example.com', 'password45', 'https://tse4.mm.bing.net/th?id=OIP.AHwEo5Bu0pqfotv4tzr8RgHaCv&pid=Api&P=0&h=220', 'http://2.bp.blogspot.com/-UniqiuC0OCY/Uib4ljITiEI/AAAAAAAABmk/Fsenv6cc4mk/s1600/Beach-beautiful-blue-dark-facebook-covers.jpg'),
+('Anum Sheikh', 'anum.sheikh@example.com', 'password46', 'https://tse3.mm.bing.net/th?id=OIP.28qFStf9ZsUuDQ-v3NcA8QHaJQ&pid=Api&P=0&h=220', 'https://tse2.mm.bing.net/th?id=OIP.BzAmyTJEnbYF-qeiok6JAgHaHa&pid=Api&P=0&h=220'),
+('Syed Imran', 'syed.imran@example.com', 'password47', 'https://images.unsplash.com/photo-1665118927278-aba03fbc3dce?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHBha2lzdGFuaSUyMGJveXN8ZW58MHx8MHx8fDA%3D', 'https://tse4.mm.bing.net/th?id=OIP.IDJKBCpvfy3uaXkSX3E9JgHaHa&pid=Api&P=0&h=220'),
+('Zeeshan Ali', 'zeeshan.ali@example.com', 'password48', 'https://tse3.mm.bing.net/th?id=OIP.Yht8ECbAk3dTsFrxu8K6ngHaHM&pid=Api&P=0&h=220', 'https://tse4.mm.bing.net/th?id=OIP.dn7U8fQS8IMNkbRJi9FIZQHaCv&pid=Api&P=0&h=220'),
+('Shahid Mehmood', 'shahid.mehmood@example.com', 'password49', 'https://tse2.mm.bing.net/th?id=OIP.lCk_xQ-G9VoGilFDtvszlAHaFj&pid=Api&P=0&h=220', 'https://tse3.mm.bing.net/th?id=OIP.xxqQfOoOSyWdStW3CuTAWwHaDo&pid=Api&P=0&h=220'),
+('Bilal Akhtar', 'bilal.akhtar@example.com', 'password50', 'https://tse2.mm.bing.net/th?id=OIP.98aEOyT4w1ztdj_BGh3waAHaHa&pid=Api&P=0&h=220', 'https://tse3.mm.bing.net/th?id=OIP.GvZBOlondNWjUZRDFwSFeAHaEo&pid=Api&P=0&h=220'),
+
+('Aliya Ahmad', 'aliya.ahmad@example.com', 'password51', 'https://i.pinimg.com/736x/00/5d/29/005d29c621c000019eb804d86787c391.jpg', 'https://tse1.mm.bing.net/th?id=OIP.Bhul9Uvqi3FKDRHLDtoXsAHaCv&pid=Api&P=0&h=220'),
+('Saima Bashir', 'saima.bashir@example.com', 'password52', 'https://i.pinimg.com/736x/6e/a0/d7/6ea0d71916fdc2befd18608e27b9affa.jpg', 'https://tse4.mm.bing.net/th?id=OIP.n6P5AOTxvpyTxVUwGzHqyAHaEK&pid=Api&P=0&h=220');
+use  Mybook;
+INSERT INTO user (username, email, password, profile_photo, cover_photo)
+VALUES
+
+('Dua Shah', 'dua.shah@example.com', 'password54', 'https://i.pinimg.com/736x/ed/8f/d9/ed8fd90e362a3935692da9102b510ee5.jpg', 'https://tse1.mm.bing.net/th?id=OIP.0_7utlxWuCcMGKwGw268CAHaEo&pid=Api&P=0&h=220'),
+('Mariam Malik', 'mariam.malik@example.com', 'password57', 'https://tse1.mm.bing.net/th?id=OIP.n_LwESpx1H6Qz1Gz63APJAHaIq&pid=Api&P=0&h=220', 'https://tse2.mm.bing.net/th?id=OIP.drAqBulAYT2vgUV8vbOhGwHaLH&pid=Api&P=0&h=220'),
+('Sara Shams', 'sara.shams@example.com', 'password59', 'https://i.pinimg.com/736x/f7/a1/be/f7a1be4ac5d07b4ef319f917d5e966c2.jpg', 'https://tse3.mm.bing.net/th?id=OIP.CqxcO-J72gY64eMFlOIo2AHaHa&pid=Api&P=0&h=220');
+DELIMITER $$
+CREATE PROCEDURE RegisterUser(
+    IN p_username VARCHAR(255),
+    IN p_password VARCHAR(255),
+    IN p_email VARCHAR(255),
+    IN p_profilePhoto VARCHAR(255),
+    IN p_coverPhoto VARCHAR(255),
+    IN p_bio text
+)
+BEGIN
+    -- Check if username already exists
+    IF EXISTS (SELECT * FROM user WHERE username = p_username) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Username already exists';
+    ELSE
+        -- Insert new user with profile and cover photo URLs
+        INSERT INTO user (username, password, email, profile_photo, cover_photo,bio )
+        VALUES (p_username, p_password, p_email, IFNULL(p_profilePhoto, 'default_profile.jpg'), IFNULL(p_coverPhoto, 'default_cover.jpg'),p_bio);
+    END IF;
+END $$
+
+
+
+
+select * from user;
+
+use Mybook;
+
+-- Create the Friend Requests table
+CREATE TABLE friend_requests (
+    request_id INT PRIMARY KEY AUTO_INCREMENT,
+    sender_id INT,
+    receiver_id INT,
+    request_status ENUM('pending', 'accepted', 'rejected') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES user(id),
+    FOREIGN KEY (receiver_id) REFERENCES user(id),
+    UNIQUE (sender_id, receiver_id)  -- Prevent duplicate requests
+);
+
+-- Inserting 60 rows into friend_requests with random sender_id, receiver_id, and request_status
+-- Inserting 60 rows with randomized status ('pending', 'accepted', or 'rejected')
+INSERT INTO friend_requests (sender_id, receiver_id, request_status)
+VALUES
+(2, 11, 'accepted'),
+(1, 5, 'pending');
+INSERT INTO friend_requests (sender_id, receiver_id, request_status)
+VALUES
+
+(3, 7, 'rejected'),
+(4, 12, 'pending'),
+(5, 2, 'accepted'),
+INSERT INTO friend_requests (sender_id, receiver_id, request_status)
+VALUES
+(6, 9, 'pending');
+
+SELECT * FROM friend_requests;
+INSERT INTO friend_requests (sender_id, receiver_id, request_status)
+VALUES
+(17, 20, 'rejected'),
+(18, 19, 'accepted'),
+(19, 18, 'pending'),
+(20, 17, 'rejected'),
+(21, 22, 'pending'),
+(22, 25, 'accepted'),
+(23, 27, 'rejected'),
+(24, 28, 'pending'),
+(25, 21, 'accepted'),
+(26, 30, 'pending'),
+(27, 23, 'rejected'),
+(28, 29, 'accepted'),
+(29, 24, 'pending'),
+(30, 26, 'rejected'),
+(31, 32, 'accepted'),
+(32, 34, 'pending'),
+(33, 33, 'rejected'),
+(34, 36, 'accepted'),
+(35, 37, 'pending'),
+(36, 35, 'rejected'),
+(37, 40, 'pending'),
+(38, 39, 'accepted'),
+(39, 42, 'rejected'),
+(40, 41, 'pending'),
+(41, 38, 'accepted'),
+(42, 43, 'rejected'),
+(43, 44, 'pending'),
+(44, 47, 'accepted'),
+(45, 46, 'pending'),
+(46, 45, 'rejected'),
+(47, 48, 'pending'),
+(48, 50, 'accepted'),
+(49, 49, 'rejected'),
+(50, 51, 'pending'),
+(51, 53, 'accepted'),
+(52, 52, 'pending'),
+(53, 54, 'rejected'),
+(54, 55, 'pending'),
+(55, 56, 'accepted'),
+(56, 58, 'rejected'),
+(57, 60, 'pending'),
+(58, 59, 'accepted'),
+(59, 57, 'rejected'),
+(60, 55, 'pending');
+
+ALTER TABLE user
+ADD COLUMN bio TEXT;
+UPDATE user SET cover_photo = 'https://wallpapercave.com/wp/wp5735547.jpg' WHERE id = 1;
+UPDATE user SET bio = '“یقیناً یہ رعایا بادشاہ کو قتل کر دے گی          مسلسل جبر سے محسن دلوں میں ڈر نہیں رہتے' WHERE id = 2;
+UPDATE user SET bio = '“ڈھونڈ اجڑے ہوئے لوگوں میں وفا کے موتی       یہ خزانے تجھے ممکن ہے خرابوں میں ملیں' WHERE id = 3;
+UPDATE user SET bio = '“م تکلف کو بھی اخلاص سمجھتے ہو فرازؔ     دوست ہوتا نہیں ہر ہاتھ ملانے والا' WHERE id = 4;
+UPDATE user SET bio = '،یوں دل جلائے بیٹھے ہو
+حسرت لگائے بیٹھے ہو
+،جس ذات نے دیا سب کچھ
+اُسے ہی بُھلائے بیٹھے ہو' WHERE id = 5;
+UPDATE user SET bio = '“کسی کو گھر سے نکلتے ہی مل گئی منزل   کوئی ہماری طرح عمر بھر سفر میں رہا' WHERE id = 6;
+ UPDATE user SET bio = '“This too shall pass.” – Persian Proverb' WHERE id = 51;
+UPDATE user SET bio = '“It always seems impossible until it’s done.” – Nelson Mandela' WHERE id = 7;
+UPDATE user SET bio = '“You must be the change you wish to see in the world.” – Mahatma Gandhi' WHERE id = 8;
+UPDATE user SET bio = '“The future belongs to those who believe in the beauty of their dreams.” – Eleanor Roosevelt' WHERE id = 9;
+UPDATE user SET bio = '“To the world, you may be one person, but to one person, you may be the world.” – Dr. Seuss' WHERE id = 10;
+UPDATE user SET bio = '“Whatever you do, do it well.” – Walt Disney' WHERE id = 11;
+UPDATE user SET bio = '“The only limit to our realization of tomorrow is our doubts of today.” – Franklin D. Roosevelt' WHERE id = 12;
+UPDATE user SET bio = '“The future depends on what we do in the present.” – Mahatma Gandhi' WHERE id = 29;
+UPDATE user SET bio = '“In the middle of every difficulty lies opportunity.” – Albert Einstein' WHERE id = 30;
+UPDATE user SET bio = '“You miss 100% of the shots you don’t take.” – Wayne Gretzky' WHERE id = 31;
+UPDATE user SET bio = '“Life is what happens when you’re busy making other plans.” – John Lennon' WHERE id = 32;
+UPDATE user SET bio = '“Success usually comes to those who are too busy to be looking for it.” – Henry David Thoreau' WHERE id = 33;
+UPDATE user SET bio = '“It does not matter how slowly you go as long as you do not stop.” – Confucius' WHERE id = 34;
+UPDATE user SET bio = '“Your time is limited, so don’t waste it living someone else’s life.” – Steve Jobs' WHERE id = 35;
+UPDATE user SET bio = '“The best revenge is massive success.” – Frank Sinatra' WHERE id = 89;
+UPDATE user SET bio = '“Life is either a daring adventure or nothing at all.” – Helen Keller' WHERE id = 90;
+UPDATE user SET bio = '“The journey of a thousand miles begins with one step.” – Lao Tzu' WHERE id = 91;
+UPDATE user SET bio = '“Good friends, good books, and a sleepy conscience: this is the ideal life.” – Mark Twain' WHERE id = 95;
+UPDATE user SET bio = '“In the end, we will remember not the words of our enemies, but the silence of our friends.” – Martin Luther King Jr.' WHERE id = 96;
+UPDATE user SET bio = '“A person who never made a mistake never tried anything new.” – Albert Einstein' WHERE id = 152;
+UPDATE user SET bio = '“You cannot swim for new horizons until you have courage to lose sight of the shore.” – William Faulkner' WHERE id = 153;
+UPDATE user SET bio = '“Success is not the key to happiness. Happiness is the key to success.” – Albert Schweitzer' WHERE id = 154;
+UPDATE user SET bio = '“Success is not in what you have, but who you are.” – Bo Bennett' WHERE id = 155;
+UPDATE user SET bio = '“Do not wait to strike till the iron is hot, but make it hot by striking.” – William Butler Yeats' WHERE id = 45;
+UPDATE user SET bio = '“We may encounter many defeats, but we must not be defeated.” – Maya Angelou' WHERE id = 46;
+UPDATE user SET bio = '“It is never too late to be what you might have been.” – George Eliot' WHERE id = 47;
+UPDATE user SET bio = '“Time is money.” – Benjamin Franklin' WHERE id = 48;
+UPDATE user SET bio = '“Those who dare to fail miserably can achieve greatly.” – John F. Kennedy' WHERE id = 49;
+UPDATE user SET bio = '“The way to get started is to quit talking and begin doing.” – Walt Disney' WHERE id = 50;
+UPDATE user SET bio = '“خوابوں کی تکمیل میں جو لگ جائے، وہی کامیاب ہے.”' WHERE id = 52;
+UPDATE user SET bio = '“سایہ نہیں، ہم خود کو سمجھنے میں ہیں، تمہیں اگر چاہا تو ماندہ کا دھیان کیا تھا.”' WHERE id = 53;
+UPDATE user SET bio = '“دلی لگن اور جذبہ اگر ہو، زندگی کامیاب ہو جاتی ہے.”' WHERE id = 54;
+UPDATE user SET bio = '“وقت کی اہمیت کو سمجھو، زندگی خودبخود ترتیب پا جائے گی.”' WHERE id = 55;
+UPDATE user SET bio = '“یادوں کی روشنی میں جو رہ جائے، وہی ہمیشہ رہتا ہے.”' WHERE id = 56;
+UPDATE user SET bio = '“خوابوں کی تکمیل کا جو ارادہ رکھے، وہی سچائی کے دروازے پہ پہنچتا ہے.”' WHERE id = 57;
+UPDATE user SET bio = '“کھلی آنکھوں سے جو خواب دیکھے، وہی حقیقت بننے کی طرف جاتے ہیں.”' WHERE id = 58;
+UPDATE user SET bio = '“پھولوں کی خوشبو جو دل میں ہو، وہ دل کی حقیقت بن جاتی ہے.”' WHERE id = 155;
+UPDATE user SET bio = '“خود کو کبھی مٹنے نہ دینا، یہ تمہاری جیت ہے.”' WHERE id = 60;
+
+UPDATE user SET bio = '“یادوں کے رنگوں میں رنگا ہوا انسان، کبھی نہ ماندہ ہوتا ہے.”' WHERE id = 61;
+UPDATE user SET bio = '“ہر لمحہ میں خوشی کی ایک گہرائی ہوتی ہے، بس ہمیں اس کا سامنا کرنا پڑتا ہے.”' WHERE id = 62;
+UPDATE user SET bio = '“جب تک تم خود سے نہیں ملے، دوسرے تمہیں کبھی نہیں سمجھیں گے.”' WHERE id = 63;
+UPDATE user SET bio = '“وقت کے ساتھ چلنا پڑتا ہے، پھر ہر دن کامیابی میں بدلتا ہے.”' WHERE id = 64;
+UPDATE user SET bio = '“کامیاب وہی ہیں جو وقت کا صحیح استعمال کرتے ہیں.”' WHERE id = 65;
+UPDATE user SET bio = '“خوابوں کی تکمیل کی محنت کبھی ضائع نہیں جاتی.”' WHERE id = 66;
+UPDATE user SET bio = '“دلی لگن جو ہو، انسان کبھی نہیں ہارتا.”' WHERE id = 67;
+UPDATE user SET bio = '“اٹھو، خواب دیکھو، اور پھر ان خوابوں کو حقیقت بناؤ.”' WHERE id = 68;
+UPDATE user SET bio = '“دنیا کا ہر مشکل راستہ، وہی اختیار کرے جو جیت کا عزم رکھے.”' WHERE id = 69;
+UPDATE user SET bio = '“دوسروں کے تجربات سے سیکھو، اور اپنی تقدیر بناؤ.”' WHERE id = 70;
+
+DELIMITER $$
+
+CREATE TRIGGER log_successful_login 
+AFTER UPDATE ON User 
+FOR EACH ROW 
+BEGIN
+    IF OLD.password = NEW.password THEN
+        -- Insert the successful login attempt into the login attempts table
+        INSERT INTO Login_Attempts (user_id, attempt_time, status)
+        VALUES (NEW.id, NOW(), 'SUCCESS');
+    END IF;
+END$$
+
+DELIMITER ;
+select * from Login_Attempts;
+
+CREATE TABLE Login_Attempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NULL,
+    attempt_time DATETIME NOT NULL,
+    status ENUM('SUCCESS', 'FAILURE') NOT NULL,
+
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL
+);
+use Mybook;
+
+DELIMITER $$
+
+CREATE PROCEDURE GetPendingFriendRequests(
+    IN receiverId INT
+)
+BEGIN
+    SELECT 
+        fr.request_id, 
+        fr.sender_id, 
+        fr.request_status, 
+        u.username, 
+        u.profile_photo
+    FROM 
+        friend_requests fr
+    JOIN 
+        user u 
+    ON 
+        fr.sender_id = u.id
+    WHERE 
+        fr.receiver_id = receiverId  -- Use the parameter directly here
+        AND fr.request_status = 'pending';
+END$$
+
+DELIMITER ;
+
+
+CALL GetPendingFriendRequests(5);
+UPDATE friend_requests
+SET request_status = 'Accepted'
+WHERE request_id = 1;
+
+CALL GetPendingFriendRequests(6);  -- Pass the receiver ID as a parameter
+
+
+CREATE TABLE posts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+
+DELIMITER $$
+
+CREATE TRIGGER AddPostVisibility
+AFTER INSERT ON posts
+FOR EACH ROW
+BEGIN
+    INSERT INTO post_visibility (user_id, post_id)
+    SELECT friend_id, NEW.id
+    FROM friends
+    WHERE user_id = NEW.user_id
+      AND status = 'accepted';
+END$$
+
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE PROCEDURE GetLoginStats()
+BEGIN
+    SELECT 
+        DATE_FORMAT(attempt_time, '%Y-%m-%d %H:%i:%s') AS login_time, 
+        COUNT(*) AS active_users
+    FROM 
+        login_attempts
+    WHERE 
+        status = 'Successful'
+    GROUP BY 
+        login_time
+    ORDER BY 
+        login_time DESC;
+END $$
+DELIMITER ;

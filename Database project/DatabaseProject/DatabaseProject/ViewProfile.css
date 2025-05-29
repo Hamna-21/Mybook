@@ -1,0 +1,119 @@
+/* Circular Frame Style */
+.circular-frame {
+    position: absolute;
+    top: 20px; /* Adjust this value to move the frame down or up */
+    right: 20px; /* Adjust this value to move the frame left or right */
+    width: 150px; /* Increase the width to make the frame bigger */
+    height: 150px; /* Increase the height to match the width */
+    background-color: white;
+    border: 5px solid blue; /* Bold blue border */
+    border-radius: 50%; /* Makes the frame circular */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.circular-frame img {
+    width: 80%; /* Adjust the size of the image inside the frame */
+    height: 80%; /* Adjust the height to make it fit inside */
+    border-radius: 50%; /* Ensures the image stays circular */
+    object-fit: cover; /* Ensures the image fits within the circular frame */
+}
+
+
+/* General reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Video Background */
+#background-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+/* Container to Center the Content */
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the left */
+    justify-content: flex-start;
+    padding-top: 50px; /* Space above the content */
+    padding-left: 40px; /* Space from the left */
+    z-index: 1;
+    position: relative;
+}
+
+/* Profile Heading */
+.profile-heading {
+    text-align: left; /* Align heading to the left */
+    margin-bottom: 40px; /* Space between heading and the boxes */
+    width: 100%;
+}
+
+.profile-heading h1 {
+    font-size: 2.5rem; /* Larger text for the heading */
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Box Container */
+.box-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between the boxes */
+    padding: 20px;
+    z-index: 1;
+    position: relative;
+    width: 80%; /* Increase width to make boxes wider */
+    max-width: 900px; /* Maximum width for large screens */
+}
+
+/* Box Styles */
+.box {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    border: 3px solid blue; /* Blue border */
+    font-weight: bold;
+    width: 100%; /* Ensure box fills the width of the container */
+    height: 150px; /* Set a fixed height */
+}
+
+/* Box Icon Styles */
+.box-icon {
+    width: 50px; /* Icon size */
+    height: 50px;
+    margin-right: 20px; /* Space between icon and text */
+}
+
+/* Box Text */
+.box h3 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+/* Link Styles to Make Boxes Clickable */
+.box-link {
+    text-decoration: none; /* Remove default underline from link */
+    cursor: pointer; /* Change cursor to pointer when hovering over the box */
+    transition: transform 0.3s ease; /* Smooth transform effect */
+}
+
+/* Hover Effect for Boxes */
+.box-link:hover .box {
+    transform: scale(1.05); /* Slightly enlarge the box on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow to the box on hover */
+}

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="R.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp&display=swap" rel="stylesheet">
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <title>Settings| MyBook</title>
+    <style type="text/css">
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7fb;
+            color: #333;
+        }
+
+        /* Top Blue Bar */
+        #blue_bar {
+            height: 70px;
+            background-color: #405d9b;
+            color: #d9dfeb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #blue_bar div {
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            
+        }
+
+        /* Title Styling */
+        #blue_bar h1 {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-right: 5rem;
+        }
+
+        /* Search Box Wrapper */
+        .search-box-wrapper {
+            position: relative;
+            width: 350px;
+            margin-left: 6rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            height: 40px;
+        }
+
+        #search_box {
+            width: 60%; /* Adjusting to create space between title and search bar */
+            height: 40px;
+            padding-left: 35px;  /* Space for icon */
+            padding-right: 15px;
+            align-items: center;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #search_box:focus {
+            border-color: #1d3c78;
+            box-shadow: 0 0 5px rgba(64, 93, 155, 0.5);
+        }
+
+        /* Search Icon */
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            font-size: 18px;
+            color: #aaa;
+        }
+        .material-symbols-sharp {
+    font-family: 'Material Symbols Sharp';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    white-space: nowrap;
+    direction: ltr;
+}
+        .container {
+            width: 90%;
+            max-width: 500px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #333;
+        }
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #405d9b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: green;
+        }
+        .file-preview {
+            margin-top: 15px;
+            width: 100%;
+            max-width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+        .input-group input {
+            flex: 1;
+        }
+        .input-group i {
+            font-size: 20px;
+            color: #888;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Update Your Settings</h2>
+        <form id="settingsForm">
+            <div class="form-group input-group">
+                <i class="fas fa-user"></i>
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter your username" required>
+                
+            </div>
+
+            <div class="form-group">
+                <label for="profile-pic">Profile Picture</label>
+                <input type="file" id="profile-pic" accept="image/*" onchange="previewImage(event)">
+                <img id="preview" class="file-preview" style="display:none;" />
+            </div>
+
+            <div class="form-group input-group">
+                <i class="fas fa-envelope"></i>
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+               
+            </div>
+
+            <div class="form-group input-group">
+                <i class="fas fa-lock"></i>
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter new password" required>
+                
+            </div>
+
+            <button type="button" onclick="updateSettings()">Update</button>
+
+            <div id="message" style="display: none;"></div>
+            <div id="error-message" class="error-message" style="display: none;"></div>
+        </form>
+    </div>
+
+    <script>
+        function updateSettings() {
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            const errorMessage = document.getElementById("error-message");
+            const successMessage = document.getElementById("message");
+            
+            // Clear previous messages
+            successMessage.style.display = "none";
+            errorMessage.style.display = "none";
+
+            if (!username || !email || !password) {
+                errorMessage.textContent = "Please fill out all fields.";
+                errorMessage.style.display = "block";
+                return;
+            }
+
+            // Send data to the backend
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "updateSettings.php", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+
+            const data = JSON.stringify({
+                username: username,
+                email: email,
+                password: password
+            });
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    successMessage.textContent = "Settings updated successfully!";
+                    successMessage.style.display = "block";
+                } else {
+                    errorMessage.textContent = "Failed to update settings.";
+                    errorMessage.style.display = "block";
+                }
+            };
+
+            xhr.send(data);
+        }
+
+        function previewImage(event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById("preview");
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    preview.src = reader.result;
+                    preview.style.display = "block";
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>

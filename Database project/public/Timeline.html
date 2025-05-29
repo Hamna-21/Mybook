@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="R.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp&display=swap" rel="stylesheet">
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <title>Timeline | MyBook</title>
+    <style type="text/css">
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7fb;
+            color: #333;
+        }
+
+        /* Top Blue Bar */
+        #blue_bar {
+            height: 70px;
+            background-color: #405d9b;
+            color: #d9dfeb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #blue_bar div {
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            
+        }
+
+        /* Title Styling */
+        #blue_bar h1 {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-right: 5rem;
+        }
+
+        /* Search Box Wrapper */
+        .search-box-wrapper {
+            position: relative;
+            width: 350px;
+            margin-left: 6rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            height: 40px;
+        }
+
+        #search_box {
+            width: 60%; /* Adjusting to create space between title and search bar */
+            height: 40px;
+            padding-left: 35px;  /* Space for icon */
+            padding-right: 15px;
+            align-items: center;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #search_box:focus {
+            border-color: #1d3c78;
+            box-shadow: 0 0 5px rgba(64, 93, 155, 0.5);
+        }
+
+        /* Search Icon */
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            font-size: 18px;
+            color: #aaa;
+        }
+/* Search Results Wrapper */
+#search_results { 
+    position: absolute;
+    top: calc(100% + 5px); /* Add spacing below the search box */
+    left: 0;
+    width: 60%; /* Match the width of the search box wrapper */
+    width: 510px !important;
+/* Restrict max width to align with search box wrapper */
+    background-color: #405d9b;
+    border: 1px solid #405d9b;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: none; /* Hide by default */
+    overflow: hidden; /* Prevent overflow of content */
+    display: none;
+    transition: opacity 0.2s ease-in-out;
+}
+#search_results.show {
+    display: block;
+    opacity: 1;
+}
+
+/* Individual Result Item */
+#search_results .result-item {
+    display: flex;
+    
+    padding: 1px; /* Moderate padding for cleaner appearance */
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* Hover Effect for Result Items */
+#search_results .result-item:hover {
+    background-color: #686868;
+}
+
+/* Profile Picture Styling */
+#search_results img {
+    width: 90px; /* Smaller profile picture */
+    height: 90px;
+    border-radius: 50%;
+    margin-right: 3px; /* Closer spacing with text */
+}
+
+/* Result Text Styling */
+#search_results p {
+    margin: 0;
+    font-size: 20px; /* Reduced font size for compact layout */
+    color: #ffffff; /* White text for contrast on dark background */
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Ensure text does not overflow */
+    text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+}
+        .material-symbols-sharp {
+    font-family: 'Material Symbols Sharp';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    white-space: nowrap;
+    direction: ltr;
+}
+        #Profile-Photo{
+            width: 150px;
+            height: 150px;
+            margin-left: 30px;
+          margin-top: 130px;
+            border-radius: 50%;
+            border:solid 2px white;
+        }
+        #menu_bar {
+            display: flex;
+            justify-content: center;
+            background-color: #fff;
+            padding: 10px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+           margin-top: 10px;
+        }
+
+        #menu_bar a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #405d9b;
+            font-size: 16px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        #menu_bar a:hover {
+            color: #1d3c78;
+        }
+        #friends_img{
+            width: 75px;
+            float:left;
+            margin: 8px;
+        }
+        #friends_bar{
+            background-color: white;
+            min-height: 100px;
+            margin-top: 60px;
+            margin-left: 70px;
+            margin-right: 20px;
+            padding: 10px;
+            align-items: center;
+            text-align: center;
+            font-size: 20px;
+            color: #1d3c78;
+        }
+        #friends{
+            clear: both;
+            font-size: 14px;
+            font-weight: bold;
+            color: #405d9b;
+
+        }
+        
+       #textarea{
+        width: 100%;
+        border: black;
+        font-size: 14px;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        
+       }
+       #post_bar{
+        margin-top: 20px;
+        background-color: white;
+        padding: 10px;
+       }
+       #post{
+        padding: 4px;
+        font-size:13px;
+        display: flex;
+       }
+       #post_reactions {
+        display: flex;
+        justify-content: space-evenly;
+        padding: 10px;
+        border-top: 1px solid #ccc;
+    }
+    #post_reactions a {
+        margin-right: 5px;
+    }
+   
+     
+    </style>
+</head>
+
+<body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background-color: #d0d8e4;">
+    <div id="blue_bar">
+        <div>
+            <!-- Title -->
+            <h1>MyBook</h1>
+            <!-- Search Box -->
+            <div class="search-box-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search_box" placeholder="Search for People" oninput="searchPeople()">
+                <!-- Results Display -->
+                <div id="search_results" class="dropdown-menu"></div>
+    <!-- Results will be displayed here -->
+</div>
+                <!-- Circular Profile Image -->
+                <img id="Profile-img" src=""style=" 
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    object-fit: cover;float: right;margin-left: 10px;">
+            </div>
+        </div>
+    </div>
+    <div>
+            <div style="display:flex;">
+                <!--friends area-->
+                <div style="min-height:400px;flex:1;" > 
+                    <div id="friends_bar">
+                    <img id="Profile-Photo" src="" >
+                    <br><div id="username" style="color: #405d9b;"></div>
+                    </div>
+                </div>
+                <!--posts area-->
+                <div style="min-height: 400px;flex:2.5;">
+    <div style="border: solid thin #aaa;padding: 8px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); margin-top: 20px;margin-left: 8px;background-color: white;">
+        <textarea id="textarea" placeholder="What's on your mind?" style="width: 100%; border: none; font-size: 14px; font-family: Verdana, Geneva, Tahoma, sans-serif; padding: 10px;"></textarea>
+    <!-- Add Image Icon -->
+    <label for="fileInput" style="cursor: pointer; color: #405d9b; margin-right: 10px;">
+        <span class="material-symbols-sharp">image</span> <!-- Image Icon -->
+    </label>
+    
+    <!-- Add Video Icon -->
+    <label for="videoInput" style="cursor: pointer; color: #405d9b;">
+        <span class="material-symbols-sharp">video_library</span> <!-- Video Icon -->
+    </label>
+</div>
+
+<!-- Hidden file input for images -->
+<input type="file" id="fileInput" accept="image/*" style="display: none;">
+<!-- Hidden file input for videos -->
+<input type="file" id="videoInput" accept="video/*" style="display: none;">
+
+<div style="display: flex; justify-content: flex-end; padding: 10px;">
+    <input id="post_button" type="submit" value="Post" style="background-color: #1d3c78; border: none; color: white; padding: 8px 20px; border-radius: 2px; cursor: pointer;">
+</div>
+
+    
+    <!-- Posts Container -->
+    <div id="post_bar"></div>
+      <!--posts-->
+        <div id="post_bar">
+            <div id="post">
+      
+    </div>
+    
+    
+
+</div>
+
+            </div>     
+        </div>
+</div>
+
+<script>
+// Fetch all posts when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('http://localhost:4000/getTimelinePosts') // No userId in the URL
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                console.log('Fetched posts:', data.posts);
+                const postBar = document.getElementById('post_bar');
+                postBar.innerHTML = ''; // Clear previous posts
+
+                const posts = Array.isArray(data.posts[0]) ? data.posts[0] : data.posts;
+
+                if (!posts || posts.length === 0) {
+                    postBar.innerText = 'No posts to display.';
+                    return;
+                }
+
+                posts.forEach(post => {
+                    const postDiv = document.createElement('div');
+                    postDiv.classList.add('post');
+                    
+                    // Build post content
+                    const profilePhoto = post.profile_photo || '/images/default.jpg';
+                    const username = post.username || 'Unknown User';
+                    const content = post.content || 'No content provided.';
+                    const createdAt = new Date(post.created_at).toLocaleDateString();
+
+                    // Embed YouTube or display image
+                    let mediaContent = '';
+                    if (post.media_url) {
+                        if (post.media_url.includes('youtube.com') || post.media_url.includes('youtu.be')) {
+                            mediaContent = `
+                                <iframe 
+                                    width="100%" 
+                                    height="500" 
+                                    src="${post.media_url.replace('watch?v=', 'embed/')}" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen 
+                                    style="margin-top: 10px;">
+                                </iframe>`;
+                        } else {
+                            mediaContent = `
+                                <img src="${post.media_url}" alt="Post media" 
+                                    style="width: 100%; max-width: 900px; height: 500px; margin-top: 10px;" />`;
+                        }
+                    }
+
+                    // Assemble post HTML
+                    postDiv.innerHTML = `
+                        <div style="display: flex; align-items: center;">
+                            <img src="${profilePhoto}" 
+                                style="width: 75px; height: 75px; border-radius: 50%; margin-right: 10px;" />
+                            <div style="font-weight: bold; color:#405d9b">${username}</div>
+                        </div>
+                        <div style="font-size: 18px; font-weight: bold; color: #333;">${content}</div>
+                        <div>${mediaContent}</div>
+                        <div id="post_reactions" style="margin-bottom: 10px;">
+                            <a href="#"> <span class="material-symbols-sharp">Favorite</span> </a>
+                            <a href="#"> <span class="material-symbols-sharp">Comment</span> </a>
+                            <span style="color: #999; margin-left: 20px;">${createdAt}</span>
+                        </div>`;
+                    
+                    // Append the post to the container
+                    postBar.appendChild(postDiv);
+                });
+            } else {
+                console.error('Error fetching posts:', data.message);
+                document.getElementById('post_bar').innerText = 'Error fetching posts.';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching posts:', error);
+            document.getElementById('post_bar').innerText = 'Error fetching posts.';
+        });
+});
+        function searchPeople() {
+    const query = document.getElementById('search_box').value.trim();
+
+    const resultsContainer = document.getElementById('search_results');
+
+    // If the input is empty, hide the results and return early
+    if (!query) {
+        resultsContainer.innerHTML = ''; // Clear the results
+        resultsContainer.style.display = 'none'; // Hide the container
+        return;
+    }
+
+    // Create an XMLHttpRequest object to send the request
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `http://localhost:4000/search?query=${query}`, true); // Ensure port is correct
+
+    // Set up a callback to handle the response
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            try {
+                const data = JSON.parse(xhr.responseText);
+                console.log('Response data:', data); // Debug log
+                displaySearchResults(data.data);
+            } catch (e) {
+                console.error('Error parsing JSON response:', e);
+                resultsContainer.innerHTML = 'Error parsing response data.';
+                resultsContainer.style.display = 'block';
+            }
+        } else {
+            console.error('Error fetching search results:', xhr.statusText);
+            resultsContainer.innerHTML = 'Error fetching search results.';
+            resultsContainer.style.display = 'block';
+        }
+    };
+
+    xhr.onerror = function () {
+        console.error('Request failed');
+        resultsContainer.innerHTML = 'Request failed. Please try again later.';
+        resultsContainer.style.display = 'block';
+    };
+
+    // Send the request
+    xhr.send();
+}
+
+function displaySearchResults(results) {
+    const resultsContainer = document.getElementById('search_results');
+    resultsContainer.innerHTML = ''; // Clear previous results
+
+    if (results && results.length > 0) {
+        resultsContainer.style.display = 'block'; // Show the results container
+        results.forEach((person) => {
+            const resultItem = document.createElement('div');
+            resultItem.classList.add('result-item');
+
+            // Create image element with a fallback placeholder if no picture URL
+            const image = document.createElement('img');
+            image.src = person.picture_url || 'path/to/default-image.jpg'; // Fallback image
+            image.alt = person.name;
+
+            // Create name element
+            const name = document.createElement('p');
+            name.textContent = person.name;
+
+            // Append image and name to result item
+            resultItem.appendChild(image);
+            resultItem.appendChild(name);
+
+            // Append result item to the results container
+            resultsContainer.appendChild(resultItem);
+        });
+    } else {
+        resultsContainer.style.display = 'none'; // Hide the container if no results
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (userData) {
+        updateUI(userData);
+    } else {
+        fetchUserData();
+    }
+});
+
+// Function to fetch user data after login
+function fetchUserData() {
+    const baseUrl = 'http://localhost:4000'; // Your server's base URL
+    fetch(`${baseUrl}/dashboard`, {
+        method: 'POST', // Or GET if you prefer
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'same-origin', // Ensure cookies are sent
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.username) {
+            // Update the UI with the fetched user data
+            document.getElementById('username').textContent = data.username;
+
+            // Fetch profile and cover photos
+            fetchImage(data.profile_photo, 'profile-img', 'default-profile.jpg');
+            fetchImage(data.cover_photo, 'cover-photo', 'default-cover.jpg');
+
+            console.log('User data fetched successfully:', data);
+        } else {
+            // If no session or invalid user, redirect to login page
+            window.location.href = 'UserDashboard.html';
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching user data:', error);
+        window.location.href = 'UserDashboard.html'; // Redirect to login page on error
+    });
+}
+
+// Function to fetch images using XMLHttpRequest
+function fetchImage(imageUrl, elementId, defaultImage) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', imageUrl || defaultImage, true);
+    
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            const img = document.getElementById(elementId);
+            const url = URL.createObjectURL(xhr.response);
+            img.src = url; // Set the image source to the blob URL
+            img.onload = function () {
+                URL.revokeObjectURL(url); // Revoke the object URL after the image is loaded
+            };
+        } else {
+            document.getElementById(elementId).src = defaultImage;
+        }
+    };
+    
+    xhr.onerror = function () {
+        document.getElementById(elementId).src = defaultImage;
+    };
+    
+    xhr.send();
+}
+
+// Event listener to ensure cookies can be accessed
+document.addEventListener('DOMContentLoaded', function () {
+  document.requestStorageAccess()
+    .then(() => {
+      console.log('Access to cookies granted');
+      // Fetch user data here if cookies are accessible
+      
+    })
+    .catch(() => {
+      console.log('Access to cookies denied');
+      // Handle the denial case here (e.g., show a message or fallback)
+    });
+});
+
+function updateUI(user) {
+    document.getElementById('username').textContent = user.username || 'Guest';
+
+    // Load images with fallback
+    loadImage(user.profile_photo, 'Profile-Photo', 'default-profile.jpg');
+   
+    loadImage(user.profile_photo, 'Profile-img', 'default-profile.jpg');
+
+    console.log('UI updated with user data:', user);
+}
+function loadImage(imageUrl, elementId, defaultImage) {
+    const img = document.getElementById(elementId);
+    if (!img) {
+        console.error(`Element with ID "${elementId}" not found.`);
+        return;
+    }
+    img.src = imageUrl || defaultImage;
+    img.onerror = () => {
+        img.src = defaultImage;
+    };
+}
+// Log the current state of localStorage
+console.log('Local Storage:', localStorage.getItem('userData'));
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (userData) {
+        console.log('User data:', userData);
+        updateUI(userData);
+    } else {
+        console.warn('No user data in local storage. Fetching from server...');
+        fetchUserData();
+    }
+});
+fetchPosts();
+
+  </script></body>
+</html>

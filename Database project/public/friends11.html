@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="R.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Friends | MyBook</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7fb;
+            color: #333;
+        }
+
+        #blue_bar {
+            height: 70px;
+            background-color: #405d9b;
+            color: #d9dfeb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #blue_bar div {
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #blue_bar h1 {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .search-box-wrapper {
+            position: relative;
+            width: 350px;
+        }
+
+        #search_box {
+            width: 100%;
+            height: 40px;
+            padding-left: 35px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            z-index: 10;
+        }
+
+        .material-symbols-sharp {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #333;
+        }
+
+        .user-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .user-item {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: white;
+        }
+
+        .user-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .send-request-btn {
+            background-color: #405d9b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .send-request-btn:disabled {
+            background-color: #bbb;
+            cursor: not-allowed;
+        }
+
+        .friend-requests-section, .friends-section {
+            width: 90%;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .friend-request-item, .friend-item {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: white;
+            margin-bottom: 10px;
+        }
+
+        .friend-request-item img, .friend-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .accept-btn {
+            background-color: red;
+            color: white;
+        }
+
+        .reject-btn {
+            background-color: green;
+            color: white;
+        }
+
+        .action-btn:disabled {
+            background-color: #bbb;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="blue_bar">
+        <div>
+            <h1>MyBook</h1>
+            <div class="search-box-wrapper">
+                <span class="material-symbols-sharp">search</span>
+                <input type="text" id="search_box" placeholder="Search users..." oninput="searchUsers()">
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Results Section -->
+    <div class="user-list-section">
+        <ul id="user-list" class="user-list"></ul>
+    </div>
+
+    <!-- Friend Requests Section -->
+    <div class="friend-requests-section">
+        <h2>Friend Requests</h2>
+        <ul id="friend-requests-list" class="friend-requests-list"></ul>
+    </div>
+
+    <!-- Friends Section -->
+    <div class="friends-section">
+        <h2>Your Friends</h2>
+        <ul id="friends-list" class="friends-list"></ul>
+    </div>
+
+    <script>
+        const userId = 1; // Replace with actual logged-in user ID
+
+        // Fetch users based on search input
+        function searchUsers() {
+            const query = document.getElementById('search_box').value;
+            fetch(`http://localhost:3000/search?q=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    const userList = document.getElementById('user-list');
+                    userList.innerHTML = '';
+                    data.forEach(user => {
+                        const listItem = document.createElement('li');
+                        listItem.classList.add('user-item');
+                        listItem.innerHTML = `
+                            <img src="${user.profile_photo || 'default.jpg'}" alt="${user.username}">
+                            <span>${user.username}</span>
+                            <button id="send-btn-${user.id}" class="send-request-btn" onclick="sendFriendRequest(${user.id})">Send Request</button>
+                        `;
+                        userList.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Send friend request to a user
+        function sendFriendRequest(friendId) {
+            fetch('http://localhost:3000/sendFriendRequest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ sender_id: userId, receiver_id: friendId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                // After sending the request, disable the button to prevent multiple requests
+                const sendRequestButton = document.getElementById(`send-btn-${friendId}`);
+                sendRequestButton.disabled = true;
+                sendRequestButton.innerText = 'Request Sent';
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Fetch pending friend requests for the logged-in user
+        function fetchFriendRequests() {
+            fetch(`http://localhost:3000/friendRequests?userId=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const friendRequestsList = document.getElementById('friend-requests-list');
+                    friendRequestsList.innerHTML = '';
+                    data.forEach(request => {
+                        const listItem = document.createElement('li');
+                        listItem.id = `request-${request.request_id}`;
+                        listItem.classList.add('friend-request-item');
+                        listItem.innerHTML = `
+                            <img src="${request.profile_photo || 'default.jpg'}" alt="${request.username}">
+                            <span>${request.username}</span>
+                            <div class="action-btns">
+                                <button class="action-btn accept-btn" onclick="acceptFriendRequest(${request.request_id})">Accept</button>
+                                <button class="action-btn reject-btn" onclick="rejectFriendRequest(${request.request_id})">Reject</button>
+                            </div>
+                        `;
+                        friendRequestsList.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Accept friend request
+       // Accept friend request
+function acceptFriendRequest(requestId) {
+    fetch('http://localhost:3000/acceptFriendRequest', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ request_id: requestId })  // Corrected key here
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        // Remove accepted request from the list instantly
+        const requestItem = document.getElementById(`request-${requestId}`);
+        requestItem.remove();
+        fetchFriends();  // Re-fetch the friends list to update UI
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+        // Reject friend request
+        function rejectFriendRequest(requestId) {
+            fetch('http://localhost:3000/rejectFriendRequest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ requestId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                // Remove rejected request from the list instantly
+                const requestItem = document.getElementById(`request-${requestId}`);
+                requestItem.remove();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Fetch friends for the logged-in user
+        function fetchFriends() {
+            fetch(`http://localhost:3000/friends?userId=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const friendsList = document.getElementById('friends-list');
+                    friendsList.innerHTML = '';
+                    data.forEach(friend => {
+                        const listItem = document.createElement('li');
+                        listItem.classList.add('friend-item');
+                        listItem.innerHTML = `
+                            <img src="${friend.profile_photo || 'default.jpg'}" alt="${friend.username}">
+                            <span>${friend.username}</span>
+                        `;
+                        friendsList.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Initialize friend requests and friends list on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchFriendRequests();
+            fetchFriends();
+        });
+    </script>
+
+</body>
+</html>
+

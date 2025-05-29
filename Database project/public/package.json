@@ -1,0 +1,19 @@
+{
+  "name": "your-project-name",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "morgan": "^1.10.0",
+    "mssql": "^11.0.1",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.11.5",
+    "node-localstorage": "^3.0.5",
+    "session-file-store": "^1.5.0",
+    "sql": "^0.78.0"
+  }
+}

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="R.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp&display=swap" rel="stylesheet">
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <title>About | MyBook</title>
+    <style type="text/css">
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7fb;
+            color: #333;
+        }
+
+        /* Top Blue Bar */
+        #blue_bar {
+            height: 70px;
+            background-color: #405d9b;
+            color: #d9dfeb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #blue_bar div {
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            
+        }
+
+        /* Title Styling */
+        #blue_bar h1 {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-right: 5rem;
+        }
+
+        /* Search Box Wrapper */
+        .search-box-wrapper {
+            position: relative;
+            width: 350px;
+            margin-left: 6rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            height: 40px;
+        }
+
+        #search_box {
+            width: 60%; /* Adjusting to create space between title and search bar */
+            height: 40px;
+            padding-left: 35px;  /* Space for icon */
+            padding-right: 15px;
+            align-items: center;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #search_box:focus {
+            border-color: #1d3c78;
+            box-shadow: 0 0 5px rgba(64, 93, 155, 0.5);
+        }
+
+        /* Search Icon */
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            font-size: 18px;
+            color: #aaa;
+        }
+/* Search Results Wrapper */
+#search_results { 
+    position: absolute;
+    top: calc(100% + 5px); /* Add spacing below the search box */
+    left: 0;
+    width: 60%; /* Match the width of the search box wrapper */
+    width: 510px !important;
+/* Restrict max width to align with search box wrapper */
+    background-color: #405d9b;
+    border: 1px solid #405d9b;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: none; /* Hide by default */
+    overflow: hidden; /* Prevent overflow of content */
+    display: none;
+    transition: opacity 0.2s ease-in-out;
+}
+#search_results.show {
+    display: block;
+    opacity: 1;
+}
+
+/* Individual Result Item */
+#search_results .result-item {
+    display: flex;
+    
+    padding: 1px; /* Moderate padding for cleaner appearance */
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* Hover Effect for Result Items */
+#search_results .result-item:hover {
+    background-color: #686868;
+}
+
+/* Profile Picture Styling */
+#search_results img {
+    width: 90px; /* Smaller profile picture */
+    height: 90px;
+    border-radius: 50%;
+    margin-right: 3px; /* Closer spacing with text */
+}
+
+/* Result Text Styling */
+#search_results p {
+    margin: 0;
+    font-size: 20px; /* Reduced font size for compact layout */
+    color: #ffffff; /* White text for contrast on dark background */
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Ensure text does not overflow */
+    text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+}
+        .material-symbols-sharp {
+    font-family: 'Material Symbols Sharp';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    white-space: nowrap;
+    direction: ltr;
+}
+
+#Profile-Photo{
+            width: 250px;
+            height: 250px;
+            margin-left: 30px;
+          margin-top: 130px;
+            border-radius: 50%;
+            border:solid 2px white;
+        }
+        
+</style>
+
+
+
+<body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background-color: #d0d8e4;">
+    <div id="blue_bar">
+        <div>
+            <h1>MyBook</h1>
+            <!-- Search Box -->
+            <div class="search-box-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search_box" placeholder="Search for People" oninput="searchPeople()">
+                <div id="search_results" class="dropdown-menu"></div>
+            </div>
+            <img id="Profile-img" src="" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; float: right; margin-left: 10px;">
+            
+        </div>
+    </div>
+    
+          <!-- Profile Section -->
+    <div id="profile-section" style="text-align: center; padding: 20px;">
+        <!-- Profile Photo -->
+        <img id="Profile-Photo" src="" alt="Profile Photo">
+        
+        <!-- Username -->
+        <div id="username" style="font-size: 50px; font-weight: bold; margin-bottom: 5px;color: rgb(46, 146, 138);">Guest</div>
+         <!-- Bio Section -->
+         <div id="bio" style="margin-top: 18px; font-size: 30px;font-weight: bold;margin-bottom: 20px; color: #55257c;">This user has not updated their bio yet.</div>
+        <!-- Email -->
+        <div id="email" style="font-size: 25px; color: #1d3c78;"></div>
+
+        <p><br><span id="created_at"style="font-size: 20px; color:#1d3c78;">N/A</span></p>
+        
+    </div>
+
+    <script>
+ 
+        function searchPeople() {
+    const query = document.getElementById('search_box').value.trim();
+
+    const resultsContainer = document.getElementById('search_results');
+
+    // If the input is empty, hide the results and return early
+    if (!query) {
+        resultsContainer.innerHTML = ''; // Clear the results
+        resultsContainer.style.display = 'none'; // Hide the container
+        return;
+    }
+
+    // Create an XMLHttpRequest object to send the request
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `http://localhost:4000/search?query=${query}`, true); // Ensure port is correct
+
+    // Set up a callback to handle the response
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            try {
+                const data = JSON.parse(xhr.responseText);
+                console.log('Response data:', data); // Debug log
+                displaySearchResults(data.data);
+            } catch (e) {
+                console.error('Error parsing JSON response:', e);
+                resultsContainer.innerHTML = 'Error parsing response data.';
+                resultsContainer.style.display = 'block';
+            }
+        } else {
+            console.error('Error fetching search results:', xhr.statusText);
+            resultsContainer.innerHTML = 'Error fetching search results.';
+            resultsContainer.style.display = 'block';
+        }
+    };
+
+    xhr.onerror = function () {
+        console.error('Request failed');
+        resultsContainer.innerHTML = 'Request failed. Please try again later.';
+        resultsContainer.style.display = 'block';
+    };
+
+    // Send the request
+    xhr.send();
+}
+
+function displaySearchResults(results) {
+    const resultsContainer = document.getElementById('search_results');
+    resultsContainer.innerHTML = ''; // Clear previous results
+
+    if (results && results.length > 0) {
+        resultsContainer.style.display = 'block'; // Show the results container
+        results.forEach((person) => {
+            const resultItem = document.createElement('div');
+            resultItem.classList.add('result-item');
+
+            // Create image element with a fallback placeholder if no picture URL
+            const image = document.createElement('img');
+            image.src = person.picture_url || 'path/to/default-image.jpg'; // Fallback image
+            image.alt = person.name;
+
+            // Create name element
+            const name = document.createElement('p');
+            name.textContent = person.name;
+
+            // Append image and name to result item
+            resultItem.appendChild(image);
+            resultItem.appendChild(name);
+
+            // Append result item to the results container
+            resultsContainer.appendChild(resultItem);
+        });
+    } else {
+        resultsContainer.style.display = 'none'; // Hide the container if no results
+
+    }
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (userData) {
+        updateUI(userData);
+    } else {
+        fetchUserData();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (userData) {
+        updateUI(userData);
+    } else {
+        fetchUserData();
+    }
+});
+
+// Function to fetch user data after login
+function fetchUserData() {
+    const baseUrl = 'http://localhost:4000'; // Your server's base URL
+    fetch(`${baseUrl}/dashboard`, {
+        method: 'POST', // Or GET if you prefer
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'same-origin', // Ensure cookies are sent
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.username) {
+            // Update the UI with the fetched user data
+            document.getElementById('username').textContent = data.username;
+            document.getElementById('email').textContent = data.email;
+            document.getElementById('created_at').textContent = data.created_at;
+            document.getElementById('bio').textContent = data.bio || 'This user';
+            // Fetch profile and cover photos
+            fetchImage(data.profile_photo, 'profile-img', 'default-profile.jpg');
+           
+
+            console.log('User data fetched successfully:', data);
+        } else {
+            // If no session or invalid user, redirect to login page
+            window.location.href = 'UserDashboard.html';
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching user data:', error);
+        window.location.href = 'UserDashboard.html'; // Redirect to login page on error
+    });
+}
+
+// Function to fetch images using XMLHttpRequest
+function fetchImage(imageUrl, elementId, defaultImage) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', imageUrl || defaultImage, true);
+    
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            const img = document.getElementById(elementId);
+            const url = URL.createObjectURL(xhr.response);
+            img.src = url; // Set the image source to the blob URL
+            img.onload = function () {
+                URL.revokeObjectURL(url); // Revoke the object URL after the image is loaded
+            };
+        } else {
+            document.getElementById(elementId).src = defaultImage;
+        }
+    };
+    
+    xhr.onerror = function () {
+        document.getElementById(elementId).src = defaultImage;
+    };
+    
+    xhr.send();
+}
+
+// Event listener to ensure cookies can be accessed
+document.addEventListener('DOMContentLoaded', function () {
+  document.requestStorageAccess()
+    .then(() => {
+      console.log('Access to cookies granted');
+      // Fetch user data here if cookies are accessible
+      
+    })
+    .catch(() => {
+      console.log('Access to cookies denied');
+      // Handle the denial case here (e.g., show a message or fallback)
+    });
+});
+
+function updateUI(user) {
+    document.getElementById('username').textContent = user.username || 'Guest';
+    document.getElementById('email').textContent=user.email || 'Guest@example.com';
+    document.getElementById('created_at').textContent=user.created_at || 'default';
+    document.getElementById('bio').textContent = user.bio || 'This user has not updated their bio yet.';
+    // Load images with fallback
+    loadImage(user.profile_photo, 'Profile-Photo', 'default-profile.jpg');
+
+    loadImage(user.profile_photo, 'Profile-img', 'default-profile.jpg');
+
+    console.log('UI updated with user data:', user);
+}
+function loadImage(imageUrl, elementId, defaultImage) {
+    const img = document.getElementById(elementId);
+    if (!img) {
+        console.error(`Element with ID "${elementId}" not found.`);
+        return;
+    }
+    img.src = imageUrl || defaultImage;
+    img.onerror = () => {
+        img.src = defaultImage;
+    };
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (userData) {
+        updateUI(userData);
+    }
+});
+// Function to format the created_at date
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit',
+        hour12: true
+    };
+    return date.toLocaleString('en-US', options);  // Format it in a readable way
+}
+
+// Retrieving data from localStorage
+const userDataFromStorage = JSON.parse(localStorage.getItem('user'));
+
+console.log('Retrieved user data:', userDataFromStorage);  // Debugging: check the retrieved data
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (userDataFromStorage) {
+        console.log('User data found:', userDataFromStorage);  // Debugging: confirm data exists
+        if (userDataFromStorage.created_at) {
+            console.log('created_at:', userDataFromStorage.created_at);  // Debugging: check if created_at exists
+            const formattedDate = formatDate(userDataFromStorage.created_at);  // Format the created_at field
+            document.getElementById('created_at').textContent = `Joined        :   ${formattedDate}`;  // Display formatted date
+        } else {
+            console.log('No created_at field found');
+        }
+    } else {
+        console.log('No user data found in localStorage');
+    }
+});
+    
+    </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+CREATE DATABASE MyBook;
+use MyBook;
+-- Create Notifications table
+CREATE TABLE Notifications (
+    Id INT AUTO_INCREMENT PRIMARY KEY, -- Auto-increment ID
+    Message VARCHAR(255) NOT NULL,     -- Notification message
+    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP -- Timestamp for creation
+);
+-- Insert sample notifications
+INSERT INTO Notifications (Message) VALUES
+('Welcome to MyBook!'),
+('You have a new friend request.'),
+('Your post has received a new comment.'),
+('Your password was changed successfully.'),
+('Your profile has been updated.');
+-- Retrieve the latest notifications
+-- Insert social media notifications with Pakistani names and locations
+INSERT INTO Notifications (Message) VALUES
+('Ibrahim liked your photo from Lahore.'),
+('Ahmad commented on your post in Karachi: "Great job!"'),
+('Sara shared your story in Islamabad.'),
+('Hina started following you from Rawalpindi.'),
+('Ali mentioned you in a comment: "Check this out!" from Faisalabad.'),
+('Ayesha sent you a friend request from Peshawar.'),
+('Hamza tagged you in a group photo from Multan.'),
+('Fatima replied to your message: "Looking forward to it!" in Quetta.'),
+('Zara uploaded a new profile picture from Sialkot.'),
+('Usman reacted to your status update: "Feeling excited!" in Abbottabad.'),
+('Bilal invited you to an event in Gilgit: "Mountains Meet-Up."'),
+('Sana shared your reel with her friends in Hyderabad.'),
+('Mariam liked your comment on her post from Bahawalpur.'),
+('Danish added you to a new group chat: "Friends from Lahore."'),
+('Farah sent you a voice message from Islamabad.'),
+('Hassan posted a story mentioning you in Sukkur.'),
+('Zainab checked into a location near you in Karachi.'),
+('Tariq suggested you follow a trending hashtag: #PakistaniFoodLovers.'),
+('Arfa invited you to play a game on the app from Faisalabad.'),
+('Nida shared a memory with you from Multan.'),
+('Taimur tagged you in a video from Rawalpindi.'),
+('Saba commented: "Amazing!" on your travel vlog from Murree.');
+
+SELECT * 
+FROM Notifications
+ORDER BY CreatedAt DESC
+LIMIT 10;
+
+
+
